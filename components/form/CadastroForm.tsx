@@ -17,7 +17,7 @@ import { cargosValores } from '@/lib/utils'
 import { Form } from '../ui/form'
 
 export default function CadastroForm() {
-  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  // const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({

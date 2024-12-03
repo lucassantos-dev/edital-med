@@ -1,41 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 model Candidato {
-  id                Int      @id @default(autoincrement())
-  nome              String
-  cnpj_cpf              String    @unique 
-  telefone          String
-  sexo              String
-  especializacao    String?
-  experiencia       String?
+  id                  Int       @id @default(autoincrement())
+  nome                String
+  cnpj_cpf            String    @unique
+  telefone            String
+  sexo                String
+  especializacao      String?
+  experiencia         String?
   experienciaHomeCare String?
-  cargo             String
-  valor             Float?
-  idade             Int?
-  cep               String
-  cidade            String
-  estado            String
-  email             String
-  createdAt         DateTime @default(now())
-  arquivos          Arquivo[]
+  cargo               String
+  valor               Float?
+  idade               Int?
+  cep                 String
+  cidade              String
+  estado              String
+  email               String
+  createdAt           DateTime  @default(now())
+  arquivos            Arquivo[]
 }
 
 model Arquivo {
-  id          Int      @id @default(autoincrement())
-  candidatoId Int
-  tipoArquivo TipoArquivo
-  nomeArquivo String
+  id             Int         @id @default(autoincrement())
+  candidatoId    Int
+  tipoArquivo    TipoArquivo
+  nomeArquivo    String
   caminhoArquivo String
-  createdAt   DateTime @default(now())
-  
-  candidato   Candidato @relation(fields: [candidatoId], references: [id])
+  createdAt      DateTime    @default(now())
+  candidato      Candidato   @relation(fields: [candidatoId], references: [id])
+
+  @@index([candidatoId], map: "Arquivo_candidatoId_fkey")
 }
 
 enum TipoArquivo {
