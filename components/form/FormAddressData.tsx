@@ -6,10 +6,13 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/
 import { Input } from "../ui/input";
 import { handleCepChange } from "@/lib/utils";
 
+import type { Cidades } from "@prisma/client";
+import { CidadesSelect } from "../CidadeSelect";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function FormAddressData({ form, }: { form: any }) {
     const [cepLoading, setCepLoading] = useState(false);
-
+    const [cidades, setCidades] = useState<Cidades[]>([]);
+    
     return (
         <>
             <h2 className="text-xl font-bold mb-8  text-[#4a79ad]">Endereço</h2>
@@ -26,7 +29,7 @@ export default function FormAddressData({ form, }: { form: any }) {
                         onChange={(e) => {
                             const cep = e.target.value.replace(/\D/g, ''); // Remove caracteres não numéricos
                             form.setValue('cep', cep); // Atualiza o valor do campo de CEP
-                            handleCepChange(cep, setCepLoading, form); // Chama a função de busca do CEP
+                            handleCepChange(cep, setCepLoading, form, setCidades); // Chama a função de busca do CEP
                         }}
                     />
                     {cepLoading && <p className="text-sm mt-3 ml-1 text-gray-500">Buscando informações...</p>}
@@ -67,6 +70,12 @@ export default function FormAddressData({ form, }: { form: any }) {
                         </FormItem>
                     )}
                 />
+                 <CidadesSelect
+          cidades={cidades}
+          name="cidadesSelecionadas"
+          control={form.control}
+          label="Cidades de Atuação"
+        />
             </div>
         </>
     );

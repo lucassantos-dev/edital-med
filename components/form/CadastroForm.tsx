@@ -2,9 +2,9 @@
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+// import { useState } from 'react'
 import { toast } from 'react-toastify'
-import ReCAPTCHA from 'react-google-recaptcha'
+// import ReCAPTCHA from 'react-google-recaptcha'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { formSchema } from '@/zod-schema/schema'
@@ -13,7 +13,6 @@ import FormProfessionalData from './FormProfessionalData'
 import FormAddressData from './FormAddressData'
 import FormTerms from './FormTerms'
 import Image from 'next/image'
-import { cargosValores } from '@/lib/utils'
 import { Form } from '../ui/form'
 
 export default function CadastroForm() {
@@ -100,7 +99,7 @@ export default function CadastroForm() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormPersonalData form={form} />
           <FormAddressData form={form} />
-          <FormProfessionalData form={form} cargosValores={cargosValores} />
+          <FormProfessionalData form={form}/>
           <FormTerms form={form.control} />
           {/* <div className="flex justify-center">
             <ReCAPTCHA

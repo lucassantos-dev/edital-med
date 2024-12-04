@@ -62,7 +62,7 @@ export async function POST(req: Request) {
     }
 
     // 5. Verifica duplicidade de CPF/CNPJ
-    const existingCandidato = await prisma.candidato.findUnique({
+    const existingCandidato = await prisma.candidatos.findUnique({
       where: { cnpj_cpf },
     });
     if (existingCandidato) {
@@ -73,7 +73,7 @@ export async function POST(req: Request) {
     }
 
     // 6. Salva os dados do candidato no banco
-    const novoCandidato = await prisma.candidato.create({
+    const novoCandidato = await prisma.candidatos.create({
       data: {
         nome,
         cnpj_cpf,
@@ -105,7 +105,7 @@ export async function POST(req: Request) {
         fs.writeFileSync(filePath, buffer);
 
         // Cria registro no banco
-        await prisma.arquivo.create({
+        await prisma.arquivos.create({
           data: {
             candidatoId: novoCandidato.id,
             tipoArquivo: tipo.toUpperCase(),

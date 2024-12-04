@@ -20,10 +20,16 @@ const fileSchema = (errorMessage: string) =>
     const file = value[0];
     const isValidSize = file.size <= MAX_FILE_SIZE;
     const isValidFormat = SUPPORTED_FORMATS.includes(file.type);
-    return isValidSize && isValidFormat;
+    return isValidSize && isValidFormat; 
   }, errorMessage);
 
-// Schema de validação principal
+// Validação de cidades selecionadas
+const cidadeSelecionadaSchema = z.object({
+  id: z.number(), // ID da cidade
+  nome: z.string().min(1), // Nome da cidade
+})
+
+// Schema principal
 export const formSchema = z
   .object({
     nome: z.string().min(2, {
@@ -41,8 +47,7 @@ export const formSchema = z
           .int(),
       ])
       .optional(),
-      cnpj_cpf: z
-      .string(),
+    cnpj_cpf: z.string(),
     telefone: z
       .string()
       .regex(phoneRegex, {
@@ -68,10 +73,12 @@ export const formSchema = z
     cep: z.string().optional(),
     cidade: z.string().optional(),
     estado: z.string().optional(),
+    cidadesSelecionadas: z
+      .array(cidadeSelecionadaSchema)
+      .min(1, { message: "Selecione ao menos uma cidade." })
+      .max(3, { message: "Você pode selecionar no máximo 3 cidades." }),
     cv: fileSchema("O currículo é obrigatório e deve ser um arquivo válido (PDF ou Word, máx. 5MB)."),
-    ccc: fileSchema("A Carteira do Conselho de Classe é obrigatório."),
-    cn: fileSchema("A certidão negativa é obrigatório."),
+    ccc: fileSchema("A Carteira do Conselho de Classe é obrigatória."),
+    cn: fileSchema("A certidão negativa é obrigatória."),
     terms: z.boolean({ required_error: "Você deve aceitar os termos e condições." }),
-  })
-  
-;
+  });
