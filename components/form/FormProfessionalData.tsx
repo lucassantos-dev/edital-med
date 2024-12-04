@@ -158,7 +158,6 @@ export default function FormProfessionalData({ form }: { form: any }) {
               </div>
               <div className=''>
               <CNUploadForm control={form.control}/>
-               
               </div>
       </>
     )

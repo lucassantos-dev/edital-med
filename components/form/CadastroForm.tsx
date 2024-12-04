@@ -14,6 +14,7 @@ import FormAddressData from './FormAddressData'
 import FormTerms from './FormTerms'
 import Image from 'next/image'
 import { Form } from '../ui/form'
+import submitCadastro, { prepareFormData } from '@/services/cadastroService'
 
 export default function CadastroForm() {
   // const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
@@ -46,45 +47,19 @@ export default function CadastroForm() {
     //   return
     // }
     try {
-      const formData = new FormData();
-      // formData.append('recaptchaToken', recaptchaToken);
-      for (const [key, value] of Object.entries(values)) {
-        if (key !== 'cv' && key !== 'ccc' && key !== 'cn') {
-          formData.append(key, String(value));
-        }
-      }
-
-      const cvFile = form.getValues('cv');
-      const cccFile = form.getValues('ccc');
-      const cnFile = form.getValues('cn');
-
-      if (cvFile && cvFile[0] instanceof File) {
-        formData.append('cv', cvFile[0]);
-      }
-      if (cccFile && cccFile[0] instanceof File) {
-        formData.append('ccc', cccFile[0]);
-      }
-      if (cnFile && cnFile[0] instanceof File) {
-        formData.append('cn', cnFile[0]);
-      }
-      const response = await fetch('/api/cadastrar', {
-        method: 'POST',
-        body: formData,
-      });
-  
-      if (response.ok) {
-        const result = await response.json();
-        console.log('Cadastro realizado:', result);
-        toast.success('Cadastro realizado com sucesso!');
-        router.push('/')
-      } else {
-        const error = await response.json();
-        console.error('Erro ao cadastrar:', error);
-        toast.error('Erro ao realizar o cadastro. Tente novamente.');
-      }
+      const cvFile = form.getValues('cv')
+    const cccFile = form.getValues('ccc')
+    const cnFile = form.getValues('cn')
+    
+    const formData = prepareFormData(values, cvFile, cccFile, cnFile)
+    
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const result = await submitCadastro(values, formData)
+    toast.success('Cadastro realizado com sucesso!')
+    router.push('/')
     } catch (error) {
-      console.error('Erro ao conectar com a API:', error);
-      toast.error('Erro ao se conectar com o servidor. Tente novamente.');
+      console.error('Erro:', error)
+      toast.error('Erro ao realizar o cadastro. Tente novamente.')
     }
   }
 
