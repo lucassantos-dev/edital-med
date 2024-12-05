@@ -12,7 +12,7 @@ import { CidadesSelect } from "../CidadeSelect";
 export default function FormAddressData({ form, }: { form: any }) {
     const [cepLoading, setCepLoading] = useState(false);
     const [cidades, setCidades] = useState<Cidades[]>([]);
-    
+
     return (
         <>
             <h2 className="text-xl font-bold mb-8  text-[#4a79ad]">Endereço</h2>
@@ -70,12 +70,12 @@ export default function FormAddressData({ form, }: { form: any }) {
                         </FormItem>
                     )}
                 />
-                 <CidadesSelect
-          cidades={cidades}
-          name="cidadesSelecionadas"
-          control={form.control}
-          label="Cidades de Atuação"
-        />
+                <CidadesSelect
+                    cidades={cidades}
+                    name="cidadesSelecionadas"
+                    control={form.control}
+                    label="Cidades de Atuação"
+                />
             </div>
         </>
     );

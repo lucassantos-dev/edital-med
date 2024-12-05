@@ -25,8 +25,10 @@ model Candidatos {
   estado              String
   email               String
   createdAt           DateTime   @default(now())
-  arquivos            Arquivos[]
-  atuacoes            Atuacao[]
+  documentosValidados Boolean?   @default(false)
+  ativo               Boolean?   @default(true)
+  arquivos            Arquivos[] // Relacionamento com Arquivos
+  atuacoes            Atuacao[] // Relacionamento com Atuacao
 
   @@index([email])
   @@index([cnpj_cpf])
@@ -53,7 +55,7 @@ model Estados {
   updatedAt DateTime? @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
 
-  cidades Cidades[]
+  cidades Cidades[] // Relacionamento com Cidades
 
   @@map("estados")
 }
@@ -68,24 +70,33 @@ model Cidades {
   deletedAt  DateTime? @map("deleted_at")
 
   estado  Estados   @relation(fields: [idEstado], references: [id])
-  Atuacao Atuacao[]
+  Atuacao Atuacao[] // Relacionamento com Atuacao
 
   @@map("cidades")
 }
 
 model Atuacao {
   id           Int         @id @default(autoincrement())
-  idade        Int
   cidadeId     Int
   cidade       Cidades     @relation(fields: [cidadeId], references: [id])
   Candidatos   Candidatos? @relation(fields: [candidatosId], references: [id])
   candidatosId Int?
+
+  @@map("atuacao")
 }
 
 enum TiposArquivos {
-  CV
-  CCC
-  CN
+  CURRICULO // Currículo (Pessoa Física)
+  CARTEIRA_CONSELHO // Carteira do Conselho de Classe (Pessoa Física)
+  ALVARA_SANITARIO // Alvará Sanitário (Pessoa Física)
+  ALVARA_FUNCIONAMENTO // Alvará de Funcionamento (Pessoa Física)
+  CERTIDAO_NEGATIVA // Certidão Negativa (Pessoa Física)
+  RELACAO_PROFISSIONAIS // Relação de Profissionais (Pessoa Jurídica)
+  CNAES // CNAEs (Pessoa Jurídica)
+  REGISTRO_CONSELHO_CLASSE // Registro no Conselho de Classe (Pessoa Jurídica)
+  ALVARA_FUNCIONAMENTO_PJ // Alvará de Funcionamento (Pessoa Jurídica)
+  ALVARA_SANITARIO_PJ // Alvará Sanitário (Pessoa Jurídica)
+  CERTIDAO_NEGATIVA_PJ // Certidão Negativa (Pessoa Jurídica)
 }
 
 model Cargos {

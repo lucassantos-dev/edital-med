@@ -1,46 +1,30 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma'; // Configuração do Prisma
 import fs from 'fs';
 import path from 'path';
 import { SenDEmail } from '@/lib/email';
 
-const UPLOAD_DIR = {
-  CV: path.join(process.cwd(), 'uploads/cv'),
-  CCC: path.join(process.cwd(), 'uploads/ccc'),
-  CN: path.join(process.cwd(), 'uploads/cn'),
-};
+const BASE_UPLOAD_DIR = path.join(process.cwd(), 'uploads');  // Base para todos os uploads
 
-// Cria diretórios de upload, se não existirem
-Object.values(UPLOAD_DIR).forEach((dir) => {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-});
+const tipoArquivoMap: Record<string, string> = {
+  cv: 'CURRICULO',
+  carteiraConselhoClasse: 'CARTEIRA_CONSELHO',
+  certidaoNegativa: 'CERTIDAO_NEGATIVA',
+  relacaoProfissionais: 'RELACAO_PROFISSIONAIS',
+  cnaes: 'CNAES',
+  registroConselhoClasse: 'REGISTRO_CONSELHO_CLASSE',
+  alvaraFuncionamento: 'ALVARA_FUNCIONAMENTO',
+  alvaraSanitario: 'ALVARA_SANITARIO',
+};
+// Função para criar diretórios personalizados baseados no CPF/CNPJ
+const getUploadDir = (cnpj_cpf: string) => path.join(BASE_UPLOAD_DIR, cnpj_cpf);
 
 export async function POST(req: Request) {
   try {
     // 1. Validação inicial e recepção de dados
     const formData = await req.formData();
-    // const recaptchaToken = formData.get('recaptchaToken') as string;
-
-    // if (!recaptchaToken) {
-    //   return NextResponse.json({ message: 'Preencha o reCAPTCHA' }, { status: 400 });
-    // }
-
-    // 2. Valida o reCAPTCHA
-    // const secretKey = process.env.RECAPTCHA_SECRET_KEY;
-    // const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    //   body: `secret=${secretKey}&response=${recaptchaToken}`,
-    // });
-    // const captchaResult = await response.json();
-
-    // if (!captchaResult.success) {
-    //   return NextResponse.json({ message: 'Falha na verificação do reCAPTCHA' }, { status: 400 });
-    // }
-
-    // 3. Extrai os dados do formulário
+    // 2. Extrai os dados do formulário
     const nome = formData.get('nome') as string;
     const cnpj_cpf = formData.get('cnpj_cpf') as string;
     const telefone = formData.get('telefone') as string;
@@ -49,11 +33,15 @@ export async function POST(req: Request) {
     const cidade = formData.get('cidade') as string;
     const estado = formData.get('estado') as string;
     const email = formData.get('email') as string;
-
-
     const valor = formData.get('valor') ? parseFloat(formData.get('valor') as string) : null;
     const idade = formData.get('idade') ? parseInt(formData.get('idade') as string, 10) : null;
-    // 4. Validação de campos obrigatórios
+
+    const cidadesSelecionadasRaw = formData.get("cidadesSelecionadas");
+    const cidadesSelecionadas = cidadesSelecionadasRaw
+      ? JSON.parse(cidadesSelecionadasRaw as string)
+      : [];
+
+    // 3. Validação de campos obrigatórios
     if (!nome || !cargo || !cidade || !estado || !cnpj_cpf) {
       return NextResponse.json(
         { message: 'Campos obrigatórios estão ausentes: nome, cargo, cidade, estado ou CPF/CNPJ' },
@@ -61,7 +49,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // 5. Verifica duplicidade de CPF/CNPJ
+    // 4. Verifica duplicidade de CPF/CNPJ
     const existingCandidato = await prisma.candidatos.findUnique({
       where: { cnpj_cpf },
     });
@@ -72,7 +60,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // 6. Salva os dados do candidato no banco
+    // 5. Salva os dados do candidato no banco
     const novoCandidato = await prisma.candidatos.create({
       data: {
         nome,
@@ -89,28 +77,52 @@ export async function POST(req: Request) {
         experienciaHomeCare: formData.get('experienciaHomeCare') as string,
         valor,
         idade,
+
       },
     });
+    for (const cidadeSelecionada of cidadesSelecionadas) {
+      await prisma.atuacao.create({
+        data: {
+          cidadeId:cidadeSelecionada.id,
+          candidatosId: novoCandidato.id,
+        },
+      });
+    }
+    // 6. Criação do diretório do candidato
+    const candidatoDir = getUploadDir(cnpj_cpf.replace(/[^\d]/g, ""));  // Diretório exclusivo para o candidato
+    if (!fs.existsSync(candidatoDir)) {
+      fs.mkdirSync(candidatoDir, { recursive: true });
+    }
 
     // 7. Processa e salva os arquivos de upload
-    const arquivos = ['cv', 'ccc', 'cn'];
-    for (const tipo of arquivos) {
+    const tiposArquivos: string[] = [
+      "cv",
+      "carteiraConselhoClasse",
+      "certidaoNegativa",
+      "relacaoProfissionais",
+      "cnaes",
+      "registroConselhoClasse",
+      "alvaraFuncionamento",
+      "alvaraSanitario",
+    ];
+    console.log(11)
+    for (const tipo of tiposArquivos) {
       const arquivo = formData.get(tipo) as File | null;
       if (arquivo) {
-        const fileName = `${tipo.toUpperCase()}-${Date.now()}-${nome.replace(/\s+/g, '').toLowerCase()}-${arquivo.name}`;
-        const filePath = path.join(UPLOAD_DIR[tipo.toUpperCase() as keyof typeof UPLOAD_DIR], fileName);
+        const fileName = `${tipo}-${Date.now()}-${nome.replace(/\s+/g, '').toLowerCase()}-${arquivo.name}`;
+        const filePath = path.join(candidatoDir, fileName); // Usando o diretório personalizado para o candidato
 
         // Salva o arquivo no sistema de arquivos
         const buffer = Buffer.from(await arquivo.arrayBuffer());
         fs.writeFileSync(filePath, buffer);
-
-        // Cria registro no banco
+        const tipoArquivoPrisma = tipoArquivoMap[tipo];
+        // Cria registro no banco de dados
         await prisma.arquivos.create({
           data: {
             candidatoId: novoCandidato.id,
-            tipoArquivo: tipo.toUpperCase(),
+            tipoArquivo: tipoArquivoPrisma as any,  // Força o tipo para aceitar o tipo string
             nomeArquivo: fileName,
-            caminhoArquivo: `/uploads/${tipo}/${fileName}`,
+            caminhoArquivo: `/uploads/${cnpj_cpf.replace(/[^\d]/g, "")}/${fileName}`,
           },
         });
       }
@@ -121,7 +133,6 @@ export async function POST(req: Request) {
 
     // 9. Retorna sucesso
     return NextResponse.json({ message: 'Cadastro realizado com sucesso', candidato: novoCandidato });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error('Erro interno:', error);
 

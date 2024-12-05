@@ -19,7 +19,6 @@ import submitCadastro, { prepareFormData } from '@/services/cadastroService'
 export default function CadastroForm() {
   // const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const router = useRouter();
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,14 +46,11 @@ export default function CadastroForm() {
     //   return
     // }
     try {
-      const cvFile = form.getValues('cv')
-    const cccFile = form.getValues('ccc')
-    const cnFile = form.getValues('cn')
-    
-    const formData = prepareFormData(values, cvFile, cccFile, cnFile)
-    
+      console.log(22)
+    const formData = prepareFormData(values)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const result = await submitCadastro(values, formData)
+    const result = await submitCadastro(
+      formData)
     toast.success('Cadastro realizado com sucesso!')
     router.push('/')
     } catch (error) {
@@ -71,7 +67,7 @@ export default function CadastroForm() {
         </div>
         <h2 className="text-3xl font-bold mb-8 text-center text-[#86b1e2]">Cadastro</h2>
         <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 border-2 p-3 border-gray-200 pb-4 rounded-sm">
           <FormPersonalData form={form} />
           <FormAddressData form={form} />
           <FormProfessionalData form={form}/>
@@ -93,5 +89,5 @@ export default function CadastroForm() {
         </Form>
       </div>
     </div>
-  );
+  )
 }

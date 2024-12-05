@@ -24,7 +24,7 @@ export default function FormTerms({ form }: { form: any }) {
                 </FormLabel>
                 <FormDescription>
                   Confirme que os dados estão corretos, e que você esta de acordo com os termos do 
-                  <Link href="/examples/forms" className='text-[#4a79ad] font-bold'> edital</Link> ?
+                  <Link href="/examples/forms" className='text-[#4a79ad] font-bold'> EDITAL </Link> ?
                 </FormDescription>
               </div>
             </FormItem>

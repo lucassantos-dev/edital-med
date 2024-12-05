@@ -18,6 +18,7 @@ export async function SenDEmail({data}: SendEmailProps) {
     });
     const attachments = arquivos.map(arquivo => {
         const filePath = path.join(process.cwd(), arquivo.caminhoArquivo);
+        
         const normalizedPath = path.normalize(filePath);
         const fileBuffer = fs.readFileSync(normalizedPath);
         return {
