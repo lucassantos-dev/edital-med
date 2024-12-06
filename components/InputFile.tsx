@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react"
 import { Control } from "react-hook-form"
 import {
@@ -11,40 +12,44 @@ import {
 
 
 interface CustomInputProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: Control<any>
+  name: string
+  title:string
+  id:string
+  description: string
+  acceptFiles: string
 }
-export default function CNUploadForm({ control }: CustomInputProps) {
-  const [fileName, setFileName] = useState<string | null>(null);
+export default function FileUpload({ control,description,id,name,title, acceptFiles }: CustomInputProps) {
+  const [fileName, setfileName] = useState<string | null>(null);
 
   return (
+    <div className="border border-gray-300 rounded-md p-4">
     <FormField
       control={control}
-      name="cn" // Certifique-se de que o nome seja o mesmo usado no schema
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      render={({ field: { onChange, value }, fieldState }) => (
+      name={name}
+      render={({ field: { onChange }, fieldState }) => (
         <FormItem>
-          <FormLabel className="text-lg text-[#4a79ad] font-semibold">Certidão Negativa</FormLabel>
+          <FormLabel className="text-sm text-[#4a79ad] font-semibold">{title}</FormLabel>
           <FormControl>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center">
               <input
                 type="file"
-                accept=".pdf,.doc,.docx"
+                accept={acceptFiles}
                 onChange={(e) => {
                   const fileList = e.target.files;
                   if (fileList && fileList.length > 0) {
-                    setFileName(fileList[0].name);
-                    onChange(fileList); // Passa o FileList para o formulário
+                    setfileName(fileList[0].name);
+                    onChange(fileList); 
                   } else {
-                    setFileName(null);
-                    onChange(null); // Limpa o valor se nenhum arquivo for selecionado
+                    setfileName(null);
+                    onChange(null);
                   }
                 }}
                 className="hidden"
-                id="cn-upload"
+                id={id}
               />
               <label
-                htmlFor="cn-upload"
+                htmlFor={id}
                 className="cursor-pointer inline-flex items-center justify-center rounded-md text-sm 
                 font-medium ring-offset-background transition-colors focus-visible:outline-none 
                 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 
@@ -53,15 +58,16 @@ export default function CNUploadForm({ control }: CustomInputProps) {
               >
                 Selecionar arquivo
               </label>
-              {fileName && <span className="text-sm text-muted-foreground">{fileName}</span>}
+              {fileName && <span className="text-sm ml-3 text-muted-foreground">{fileName}</span>}
             </div>
           </FormControl>
           {fieldState.error && <FormMessage>{fieldState.error.message}</FormMessage>}
           <FormDescription>
-            Faça upload da sua Certidão negativa
+          <span dangerouslySetInnerHTML={{ __html: description }} />
           </FormDescription>
         </FormItem>
       )}
     />
+    </div>
   );
 }

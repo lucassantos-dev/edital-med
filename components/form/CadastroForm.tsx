@@ -2,9 +2,9 @@
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+// import { useState } from 'react'
 import { toast } from 'react-toastify'
-import ReCAPTCHA from 'react-google-recaptcha'
+// import ReCAPTCHA from 'react-google-recaptcha'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { formSchema } from '@/zod-schema/schema'
@@ -13,13 +13,13 @@ import FormProfessionalData from './FormProfessionalData'
 import FormAddressData from './FormAddressData'
 import FormTerms from './FormTerms'
 import Image from 'next/image'
-import { cargosValores } from '@/lib/utils'
 import { Form } from '../ui/form'
+import submitCadastro, { prepareFormData } from '@/services/cadastroService'
+import { useState } from 'react'
 
 export default function CadastroForm() {
-  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  // const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const router = useRouter();
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -40,52 +40,35 @@ export default function CadastroForm() {
       isCpf: false,
     },
   })
-
+  const [isLoading, setIsLoading] = useState(false);
   async function onSubmit(values: z.infer<typeof formSchema>) {
+   
     // if (!recaptchaToken){
     //   toast.error('Preencha o reCAPTCHA')
     //   return
     // }
     try {
-      const formData = new FormData();
-      // formData.append('recaptchaToken', recaptchaToken);
-      for (const [key, value] of Object.entries(values)) {
-        if (key !== 'cv' && key !== 'ccc' && key !== 'cn') {
-          formData.append(key, String(value));
-        }
-      }
-
-      const cvFile = form.getValues('cv');
-      const cccFile = form.getValues('ccc');
-      const cnFile = form.getValues('cn');
-
-      if (cvFile && cvFile[0] instanceof File) {
-        formData.append('cv', cvFile[0]);
-      }
-      if (cccFile && cccFile[0] instanceof File) {
-        formData.append('ccc', cccFile[0]);
-      }
-      if (cnFile && cnFile[0] instanceof File) {
-        formData.append('cn', cnFile[0]);
-      }
-      const response = await fetch('/api/cadastrar', {
-        method: 'POST',
-        body: formData,
-      });
-  
-      if (response.ok) {
-        const result = await response.json();
-        console.log('Cadastro realizado:', result);
+      setIsLoading(true);
+      const formData = prepareFormData(values);
+      const response = await submitCadastro(formData);
+      if (response.status === 201) {
+        // Cadastro realizado com sucesso
         toast.success('Cadastro realizado com sucesso!');
-        router.push('/')
+        router.push('/');
+      } else if (response.status === 204) {
+        // Aviso amigável para status 404
+        const responseData = await response.json();
+        toast.warning(responseData.message || 'O cadastro já existe');
       } else {
-        const error = await response.json();
-        console.error('Erro ao cadastrar:', error);
-        toast.error('Erro ao realizar o cadastro. Tente novamente.');
+        // Para qualquer outro status, exiba uma mensagem genérica
+        const responseData = await response.json();
+        toast.error(responseData.message || 'Erro ao realizar o cadastro. Tente novamente.');
       }
     } catch (error) {
-      console.error('Erro ao conectar com a API:', error);
-      toast.error('Erro ao se conectar com o servidor. Tente novamente.');
+      console.error('Erro:', error);
+      toast.error('Erro inesperado ao realizar o cadastro. Tente novamente.');
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -96,28 +79,35 @@ export default function CadastroForm() {
           <Image src="/Logo_Medlar.png" alt="Medlar Logo" width={200} height={200} className="mb-8" />
         </div>
         <h2 className="text-3xl font-bold mb-8 text-center text-[#86b1e2]">Cadastro</h2>
-        <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormPersonalData form={form} />
-          <FormAddressData form={form} />
-          <FormProfessionalData form={form} cargosValores={cargosValores} />
-          <FormTerms form={form.control} />
-          {/* <div className="flex justify-center">
-            <ReCAPTCHA
-              sitekey={String(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY)}
-              onChange={(token) => setRecaptchaToken(token)}
-              onExpired={() => setRecaptchaToken(null)}
-            />
-          </div> */}
-          <Button  type="submit" className="w-full bg-[#67a892] hover:bg-[#4a79ad] h-12 text-lg">
-            Cadastrar
-          </Button>
-          {/* <Button disabled={!recaptchaToken} type="submit" className="w-full bg-[#67a892] hover:bg-[#4a79ad] h-12 text-lg">
-            Cadastrar
-          </Button> */}
-        </form>
-        </Form>
+        {isLoading ? (
+          <div className="flex justify-center">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#4a79ad]"></div>
+          </div>
+        ) : (
+          <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 border-2 p-3 border-gray-200 pb-4 rounded-sm">
+            <FormPersonalData form={form} />
+            <FormAddressData form={form} />
+            <FormProfessionalData form={form}/>
+            <FormTerms form={form.control} />
+            {/* <div className="flex justify-center">
+              <ReCAPTCHA
+                sitekey={String(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY)}
+                onChange={(token) => setRecaptchaToken(token)}
+                onExpired={() => setRecaptchaToken(null)}
+              />
+            </div> */}
+            <Button  type="submit" className="w-full bg-[#67a892] hover:bg-[#4a79ad] h-12 text-lg">
+              Cadastrar
+            </Button>
+            {/* <Button disabled={!recaptchaToken} type="submit" className="w-full bg-[#67a892] hover:bg-[#4a79ad] h-12 text-lg">
+              Cadastrar
+            </Button> */}
+          </form>
+          </Form>
+        )}
+        
       </div>
     </div>
-  );
+  )
 }

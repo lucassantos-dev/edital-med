@@ -2,14 +2,11 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/comp
 import { Input } from '@/components/ui/input';
 import { CustomInput } from '../CustomInput';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { useState } from 'react';
 import { Switch } from '../ui/switch';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function FormPersonalData({ form }: { form: any }) {
-  const [isCpf, setIsCpf] = useState(false);
-
-
+  
   return (
     <>
       <h2 className="text-xl font-bold mb-8 text-[#4a79ad]">Dados Pessoais</h2>
@@ -38,12 +35,9 @@ export default function FormPersonalData({ form }: { form: any }) {
                 <span>CNPJ</span>
               </div>
               <FormControl>
-                <Switch
-                  checked={isCpf}
-                  onCheckedChange={(checked) => {
-                    setIsCpf(checked);  // Atualiza o estado
-                    form.setValue('isCpf', checked);  // Atualiza o valor no formulário
-                  }}
+              <Switch
+                checked={field.value}
+                onCheckedChange={field.onChange}
                 />
               </FormControl>
               <div className='p-1 flex'>
@@ -53,7 +47,7 @@ export default function FormPersonalData({ form }: { form: any }) {
           )}
         />
       </div>
-      {isCpf ? (
+      {form.getValues("isCpf") ? (
         <CustomInput
           labelText='CPF'
           control={form.control}

@@ -1,45 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+  seed     = "ts-node prisma/seed.ts"
+}
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
-model Candidato {
-  id                Int      @id @default(autoincrement())
-  nome              String
-  cnpj_cpf              String    @unique 
-  telefone          String
-  sexo              String
-  especializacao    String?
-  experiencia       String?
+model Candidatos {
+  id                  Int        @id @default(autoincrement())
+  nome                String
+  cnpj_cpf            String     @unique
+  telefone            String
+  sexo                String
+  especializacao      String?
+  experiencia         String?
   experienciaHomeCare String?
-  cargo             String
-  valor             Float?
-  idade             Int?
-  cep               String
-  cidade            String
-  estado            String
-  email             String
-  createdAt         DateTime @default(now())
-  arquivos          Arquivo[]
+  cargo               String
+  valor               Float?
+  idade               Int?
+  cep                 String
+  cidade              String
+  estado              String
+  email               String
+  createdAt           DateTime   @default(now())
+  documentosValidados Boolean?   @default(false)
+  ativo               Boolean?   @default(true)
+  arquivos            Arquivos[] // Relacionamento com Arquivos
+  atuacoes            Atuacao[] // Relacionamento com Atuacao
+
+  @@index([email])
+  @@index([cnpj_cpf])
 }
 
-model Arquivo {
-  id          Int      @id @default(autoincrement())
-  candidatoId Int
-  tipoArquivo TipoArquivo
-  nomeArquivo String
+model Arquivos {
+  id             Int        @id @default(autoincrement())
+  candidatoId    Int        @unique
+  nomeArquivo    String
   caminhoArquivo String
-  createdAt   DateTime @default(now())
-  
-  candidato   Candidato @relation(fields: [candidatoId], references: [id])
+  createdAt      DateTime   @default(now())
+  candidato      Candidatos @relation(fields: [candidatoId], references: [id])
+
+  @@index([candidatoId], map: "Arquivo_candidatoId_fkey")
 }
 
-enum TipoArquivo {
-  CV
-  CCC
-  CN
+model Estados {
+  id        Int       @id @default(autoincrement())
+  nome      String    @db.VarChar(30)
+  sigla     String    @db.VarChar(2)
+  pais      String    @db.VarChar(20)
+  createdAt DateTime? @map("created_at")
+  updatedAt DateTime? @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  cidades Cidades[] // Relacionamento com Cidades
+
+  @@map("estados")
+}
+
+model Cidades {
+  id         Int       @id @default(autoincrement())
+  idEstado   Int
+  nome       String    @db.VarChar(50)
+  codigoIbge String    @db.VarChar(10)
+  createdAt  DateTime? @map("created_at")
+  updatedAt  DateTime? @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+
+  estado  Estados   @relation(fields: [idEstado], references: [id])
+  Atuacao Atuacao[] // Relacionamento com Atuacao
+
+  @@map("cidades")
+}
+
+model Atuacao {
+  id           Int         @id @default(autoincrement())
+  cidadeId     Int
+  cidade       Cidades     @relation(fields: [cidadeId], references: [id])
+  Candidatos   Candidatos? @relation(fields: [candidatosId], references: [id])
+  candidatosId Int?
+
+  @@map("atuacao")
+}
+
+model Cargos {
+  id          Int    @id @default(autoincrement())
+  nome        String @unique
+  valor_medio Float
 }

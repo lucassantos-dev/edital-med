@@ -1,6 +1,7 @@
+import type { Candidatos, Cargos } from "@prisma/client";
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { Candidato } from "./email";
+import type { Cidades } from "@prisma/client";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -39,39 +40,60 @@ export function validatorCNPJ(cnpj: string): boolean {
   return true;
 }
 
-const valorMax = (cargo: Cargo | ''): number => {
-  return cargosValores[cargo as Cargo] || 0
-}
-export  const valorValidator = (value: number, cargo: Cargo) => {
-  const maxValue = valorMax(cargo)
-  if (value >= maxValue) {
-    if (maxValue === 0) {
-      return 'Selecione um cargo'
-    }
-    return `Valor máximo que pagamos é de  ${maxValue}`
+export function validateValor(valor: number, cargo: string, cargos: Cargos[]): string | true {
+  const cargoSelecionado = cargos.find((c) => c.nome === cargo);
+  if (!cargoSelecionado) return 'Selecione um cargo válido';
+
+  if (valor > cargoSelecionado.valor_medio) {
+    return `O valor máximo permitido para ${cargoSelecionado.nome} é R$ ${cargoSelecionado.valor_medio.toFixed(2)}`;
   }
-  return true
+  return true;
 }
 
+export async function fetchCargos(): Promise<Cargos[]>{
+  try {
+    const response = await fetch('/api/cargos')
+    const data = await response.json()
+    return data.cargos
+  } catch(erro){
+    console.log(erro)
+    return []
+  }
+}
 
-export const cargosValores = {
-  enfermeiro: 30,
-  medico: 50,
-  auxiliar: 20,
-  fisioterapeuta: 35,
-  nutricionista: 25,
-} as const;
+// export const cargosValores = {
+//   enfermeiro: 30,
+//   medico: 50,
+//   auxiliar: 20,
+//   fisioterapeuta: 35,
+//   nutricionista: 25,
+// } as const;
 
-export type Cargo = keyof typeof cargosValores;
+// export type Cargo = keyof typeof cargosValores;
+
+
+export const handlerCidade = async (
+  uf: string,
+  setCidades: (cidades: Cidades[]) => void
+) => {
+  try {
+    const response = await fetch(`/api/cidades?uf=${uf}`);
+    const data = await response.json();
+    setCidades(data.cidades || []);
+  } catch (error) {
+    console.error("Erro ao buscar cidades:", error);
+    setCidades([]);
+  }
+};
+
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const handleCepChange = async (cep: string, setCepLoading: (loading: boolean) => void, form: any ) => {
-  if (cep.length === 8) { // ViaCEP aceita apenas números sem traço
+export const handleCepChange = async (cep: string, setCepLoading: (loading: boolean) => void, form: any,setCidades: (cidades: Cidades[]) => void ) => {
+  if (cep.length === 8) {
     setCepLoading(true);
     try {
       const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
       const data = await response.json();
-
       if (data.erro) {
         console.log('CEP não encontrado.');
         form.setValue('cidade', '');
@@ -80,6 +102,8 @@ export const handleCepChange = async (cep: string, setCepLoading: (loading: bool
         // Atualiza os campos de cidade e estado
         form.setValue('cidade', data.localidade || '');
         form.setValue('estado', data.uf || '');
+
+        handlerCidade(data.uf, setCidades)
       }
     } catch (error) {
       console.log('Erro ao buscar o CEP. Tente novamente.' + error);
@@ -88,7 +112,6 @@ export const handleCepChange = async (cep: string, setCepLoading: (loading: bool
     }
   } else {
     form.setValue('cidade', '');
-    
     form.setValue('estado', '');
   }
 };
@@ -158,7 +181,8 @@ export function generateCandidateEmailTemplate(nome: string): string {
 </html>
   `;
 }
-export function generateRHTemplate(data: Candidato): string {
+
+export function generateRHTemplate(data: Candidatos): string {
   return `
 <!DOCTYPE html>
 <html lang="en">
