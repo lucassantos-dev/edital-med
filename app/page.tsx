@@ -31,8 +31,8 @@ export default function Home() {
       <div className="container mx-auto px-4 py-12 relative z-10">
         <h1 className="text-4xl font-bold text-center mb-12 text-white">Edital de Vagas - Medlar</h1>
         <div className='flex justify-center h-20 m-3'>
-        <div className='flex justify-center bg-white w-[250px] h-[18] rounded-lg p-2' >
-          <Image src="/Logo_Medlar.png" alt="Medlar Logo" width={200} height={150} className="" />
+        <div className='flex justify-center bg-white w-[250px] h-[60px] rounded-lg p-2' >
+          <Image src="/Logo_Medlar.png" alt="Medlar Logo" width={200} height={100} className="" />
         </div>
         </div>
         <div className="grid md:grid-cols-2 gap-8 mb-12">
@@ -43,13 +43,22 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <p className="mb-4">
-                A Medlar está com vagas abertas para diversos cargos. Este edital contém todas as informações
-                necessárias para os candidatos interessados em fazer parte da nossa equipe.
+              A MEDLAR Soluções em Saúde leva ao conhecimento dos interessados o 
+              presente processo de captação e seleção de pessoas físicas ou jurídicas: <span className='text-teal-600 font-semibold'>enfermeiros, médicos, fisioterapeutas, 
+              fonoaudiólogos, psicólogos,  terapeutas ocupacionais, nutricionistas,</span> interessados na prestação de serviços em atenção 
+              domiciliar nas modalidades de gerenciamento e internação domiciliar aos diversos clientes que necessitem de assistência 
+              domiciliar nas cidades de médio porte dos estados e municípios dos estados Norte e Nordeste brasileiro, 
+              nas condições estabelecidas neste edital e seus anexos.
               </p>
+                <span> 2. DAS CONDIÇÕES DE PARTICIPAÇÃO</span> 
               <ul className="list-disc list-inside mb-4">
-                <li>Período de inscrições: 01/06/2024 a 30/06/2024</li>
-                <li>Vagas disponíveis: </li>
-                <li>Requisitos: Formação superior na área e experiência mínima de 2 anos</li>
+                 <li> 2.1 Somente serão admitidos a participar deste processo de captação e seleção profissionais de saúde autônomos ou pessoas 
+                  jurídicas que comprovem regularidade junto ao conselho de classe da categoria
+                   (sem pendências financeiras).</li>
+                  <li>2.2 Os profissionais selecionados firmaram vínculo de prestação de serviço não empregatício junto a MEDLAR.</li>
+                  <li>2.3 Para participar, os profissionais ou pessoas jurídicas interessados, deverão apresentar toda a documentação 
+                  solicitada neste edital até 31/12/2024.</li>
+
               </ul>
             </CardContent>
           </Card>
@@ -74,7 +83,7 @@ export default function Home() {
 
         <div className="text-center mb-12">
           <Link href="/cadastro">
-            <Button size="lg" className="bg-[#4a79ad] hover:bg-[#67a892] text-white">
+            <Button size="lg" className="bg-[#4a79ad] hover:bg-[#67a892] text-lg  text-white h-16">
               Ir para a Página de Cadastro
             </Button>
           </Link>

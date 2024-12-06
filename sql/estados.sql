@@ -78,8 +78,8 @@ INSERT INTO `estados` (`id`, `nome`, `sigla`, `pais`, `created_at`, `updated_at`
 --
 -- Índices para tabela `estados`
 --
-ALTER TABLE `estados`
-  ADD PRIMARY KEY (`id`);
+-- ALTER TABLE `estados`
+--   ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT de tabelas despejadas
@@ -88,9 +88,9 @@ ALTER TABLE `estados`
 --
 -- AUTO_INCREMENT de tabela `estados`
 --
-ALTER TABLE `estados`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
-COMMIT;
+-- ALTER TABLE `estados`
+--   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+-- COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -7,16 +7,6 @@ import { SenDEmail } from '@/lib/email';
 
 const BASE_UPLOAD_DIR = path.join(process.cwd(), 'uploads');  // Base para todos os uploads
 
-const tipoArquivoMap: Record<string, string> = {
-  cv: 'CURRICULO',
-  carteiraConselhoClasse: 'CARTEIRA_CONSELHO',
-  certidaoNegativa: 'CERTIDAO_NEGATIVA',
-  relacaoProfissionais: 'RELACAO_PROFISSIONAIS',
-  cnaes: 'CNAES',
-  registroConselhoClasse: 'REGISTRO_CONSELHO_CLASSE',
-  alvaraFuncionamento: 'ALVARA_FUNCIONAMENTO',
-  alvaraSanitario: 'ALVARA_SANITARIO',
-};
 // Função para criar diretórios personalizados baseados no CPF/CNPJ
 const getUploadDir = (cnpj_cpf: string) => path.join(BASE_UPLOAD_DIR, cnpj_cpf);
 
@@ -48,7 +38,6 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-
     // 4. Verifica duplicidade de CPF/CNPJ
     const existingCandidato = await prisma.candidatos.findUnique({
       where: { cnpj_cpf },
@@ -56,7 +45,7 @@ export async function POST(req: Request) {
     if (existingCandidato) {
       return NextResponse.json(
         { message: `Já existe um candidato cadastrado com o CPF/CNPJ ${cnpj_cpf}` },
-        { status: 400 }
+        { status: 204 }
       );
     }
 
@@ -95,44 +84,33 @@ export async function POST(req: Request) {
     }
 
     // 7. Processa e salva os arquivos de upload
-    const tiposArquivos: string[] = [
-      "cv",
-      "carteiraConselhoClasse",
-      "certidaoNegativa",
-      "relacaoProfissionais",
-      "cnaes",
-      "registroConselhoClasse",
-      "alvaraFuncionamento",
-      "alvaraSanitario",
-    ];
-    console.log(11)
-    for (const tipo of tiposArquivos) {
-      const arquivo = formData.get(tipo) as File | null;
-      if (arquivo) {
-        const fileName = `${tipo}-${Date.now()}-${nome.replace(/\s+/g, '').toLowerCase()}-${arquivo.name}`;
-        const filePath = path.join(candidatoDir, fileName); // Usando o diretório personalizado para o candidato
+    const arquivoCompactado = formData.get("documentos") as File;
 
-        // Salva o arquivo no sistema de arquivos
-        const buffer = Buffer.from(await arquivo.arrayBuffer());
-        fs.writeFileSync(filePath, buffer);
-        const tipoArquivoPrisma = tipoArquivoMap[tipo];
-        // Cria registro no banco de dados
-        await prisma.arquivos.create({
-          data: {
-            candidatoId: novoCandidato.id,
-            tipoArquivo: tipoArquivoPrisma as any,  // Força o tipo para aceitar o tipo string
-            nomeArquivo: fileName,
-            caminhoArquivo: `/uploads/${cnpj_cpf.replace(/[^\d]/g, "")}/${fileName}`,
-          },
-        });
+    if (arquivoCompactado) {
+      const candidatoDir = getUploadDir(cnpj_cpf.replace(/[^\d]/g, ""));
+      if (!fs.existsSync(candidatoDir)) {
+        fs.mkdirSync(candidatoDir, { recursive: true });
       }
-    }
+      const fileName = `documentacao-${Date.now()}.zip`;
+  const filePath = path.join(candidatoDir, fileName);
 
+  const buffer = Buffer.from(await arquivoCompactado.arrayBuffer());
+  fs.writeFileSync(filePath, buffer);
+
+  // Salva no banco de dados
+      await prisma.arquivos.create({
+        data: {
+          candidatoId: novoCandidato.id,
+          nomeArquivo: fileName,
+          caminhoArquivo: `/uploads/${cnpj_cpf.replace(/[^\d]/g, "")}/${fileName}`,
+        },
+      });
+}
     // 8. Envia email de confirmação
     await SenDEmail({ data: novoCandidato });
 
     // 9. Retorna sucesso
-    return NextResponse.json({ message: 'Cadastro realizado com sucesso', candidato: novoCandidato });
+    return NextResponse.json({ message: 'Cadastro realizado com sucesso', candidato: novoCandidato }, { status: 201 });
   } catch (error: any) {
     console.error('Erro interno:', error);
 

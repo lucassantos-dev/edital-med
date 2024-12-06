@@ -4,14 +4,18 @@ import { z } from "zod";
 const phoneRegex = /^\(\d{2}\) \d{5}(?:-\d{4})?$/;
 
 // Constantes para validação de arquivos
-// const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-// const SUPPORTED_FORMATS = [
-//   "application/pdf",
-//   "application/msword",
-//   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-//   "application/zip", // Formato ZIP
-//   "application/x-rar-compressed", // Formato RAR
-// ];
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const SUPPORTED_FORMATS = [
+  "application/zip", // Formato ZIP
+  "application/x-rar-compressed", // Formato RAR
+  "application/x-zip-compressed",
+  " application/x-compress",
+  "application/x-gzip",
+  "application/x-compressed",
+  "application/x-zip",
+  "application/zip",
+  "multipart/x-zip",
+];
 // Função de validação para CPF
 const validateCPF = (cpf: string): boolean => {
   cpf = cpf.replace(/[^\d]+/g, "");
@@ -76,10 +80,11 @@ const fileSchema = (errorMessage: string) =>
     if (!(value instanceof FileList) || value.length === 0) {
       return false;
     }
-    // const file = value[0];
-    // const isValidSize = file.size <= MAX_FILE_SIZE;
-    // const isValidFormat = true
-    return true; 
+    const file = value[0];
+    const isValidSize = file.size <= MAX_FILE_SIZE;
+    const isValidFormat = SUPPORTED_FORMATS.includes(file.type);
+    console.log( isValidSize && isValidFormat)
+    return isValidSize && isValidFormat;
   }, errorMessage);
 
 // Validação de cidades selecionadas
@@ -136,24 +141,12 @@ export const formSchema = z
       .array(cidadeSelecionadaSchema)
       .min(1, { message: "Selecione ao menos uma cidade." })
       .max(3, { message: "Você pode selecionar no máximo 3 cidades." }),
-    documentosCnpj: z.object({
-      relacaoProfissionais: fileSchema("A relação dos Profissionais é obrigatória"),
-      cnaes: fileSchema("A lista das CNAS e obrigatória"),
-      registroConselhoClasse: fileSchema("O registro do conselho e obrigatória"),
-      alvaraFuncionamento: fileSchema("O alvará é obrigatória"),
-      alvaraSanitario: fileSchema("O alvará é obrigatória"),
-    }).optional(),
-    documentosCpf: z.object({
-      cv: fileSchema("O currículo é obrigatório e deve ser um arquivo válido (PDF ou Word, máx. 5MB)."),
-      carteiraConselhoClasse: fileSchema("A Carteira do Conselho de Classe é obrigatória."),
-      certidaoNegativa: fileSchema("A certidão negativa é obrigatória."),
-    }).optional(),
+    documentos: fileSchema("Envie um arquivo ZIP contendo os documentos exigidos."),
     terms: z.boolean({ required_error: "Você deve aceitar os termos e condições." }),
   })
   .refine(
     (data) => {
       // Validação condicional de CPF ou CNPJ
-      console.log(data.isCpf)
       return data.isCpf ? validateCPF(data.cnpj_cpf) : validateCNPJ(data.cnpj_cpf);
     },
     { message: "Documento inválido", path: ["cnpj_cpf"] }

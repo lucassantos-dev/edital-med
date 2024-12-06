@@ -35,13 +35,12 @@ model Candidatos {
 }
 
 model Arquivos {
-  id             Int           @id @default(autoincrement())
-  candidatoId    Int
-  tipoArquivo    TiposArquivos
+  id             Int        @id @default(autoincrement())
+  candidatoId    Int        @unique
   nomeArquivo    String
   caminhoArquivo String
-  createdAt      DateTime      @default(now())
-  candidato      Candidatos    @relation(fields: [candidatoId], references: [id])
+  createdAt      DateTime   @default(now())
+  candidato      Candidatos @relation(fields: [candidatoId], references: [id])
 
   @@index([candidatoId], map: "Arquivo_candidatoId_fkey")
 }
@@ -83,20 +82,6 @@ model Atuacao {
   candidatosId Int?
 
   @@map("atuacao")
-}
-
-enum TiposArquivos {
-  CURRICULO // Currículo (Pessoa Física)
-  CARTEIRA_CONSELHO // Carteira do Conselho de Classe (Pessoa Física)
-  ALVARA_SANITARIO // Alvará Sanitário (Pessoa Física)
-  ALVARA_FUNCIONAMENTO // Alvará de Funcionamento (Pessoa Física)
-  CERTIDAO_NEGATIVA // Certidão Negativa (Pessoa Física)
-  RELACAO_PROFISSIONAIS // Relação de Profissionais (Pessoa Jurídica)
-  CNAES // CNAEs (Pessoa Jurídica)
-  REGISTRO_CONSELHO_CLASSE // Registro no Conselho de Classe (Pessoa Jurídica)
-  ALVARA_FUNCIONAMENTO_PJ // Alvará de Funcionamento (Pessoa Jurídica)
-  ALVARA_SANITARIO_PJ // Alvará Sanitário (Pessoa Jurídica)
-  CERTIDAO_NEGATIVA_PJ // Certidão Negativa (Pessoa Jurídica)
 }
 
 model Cargos {
