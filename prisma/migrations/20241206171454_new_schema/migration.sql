@@ -16,6 +16,8 @@ CREATE TABLE `Candidatos` (
     `estado` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `documentosValidados` BOOLEAN NULL DEFAULT false,
+    `ativo` BOOLEAN NULL DEFAULT true,
 
     UNIQUE INDEX `Candidatos_cnpj_cpf_key`(`cnpj_cpf`),
     INDEX `Candidatos_email_idx`(`email`),
@@ -27,11 +29,11 @@ CREATE TABLE `Candidatos` (
 CREATE TABLE `Arquivos` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `candidatoId` INTEGER NOT NULL,
-    `tipoArquivo` ENUM('CV', 'CCC', 'CN') NOT NULL,
     `nomeArquivo` VARCHAR(191) NOT NULL,
     `caminhoArquivo` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
+    UNIQUE INDEX `Arquivos_candidatoId_key`(`candidatoId`),
     INDEX `Arquivo_candidatoId_fkey`(`candidatoId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -63,6 +65,15 @@ CREATE TABLE `cidades` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `atuacao` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `cidadeId` INTEGER NOT NULL,
+    `candidatosId` INTEGER NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `Cargos` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `nome` VARCHAR(191) NOT NULL,
@@ -77,3 +88,9 @@ ALTER TABLE `Arquivos` ADD CONSTRAINT `Arquivos_candidatoId_fkey` FOREIGN KEY (`
 
 -- AddForeignKey
 ALTER TABLE `cidades` ADD CONSTRAINT `cidades_idEstado_fkey` FOREIGN KEY (`idEstado`) REFERENCES `estados`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `atuacao` ADD CONSTRAINT `atuacao_cidadeId_fkey` FOREIGN KEY (`cidadeId`) REFERENCES `cidades`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `atuacao` ADD CONSTRAINT `atuacao_candidatosId_fkey` FOREIGN KEY (`candidatosId`) REFERENCES `Candidatos`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;

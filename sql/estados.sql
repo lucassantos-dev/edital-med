@@ -42,7 +42,7 @@ SET time_zone = "+00:00";
 -- -- Extraindo dados da tabela `estados`
 -- --
 
-INSERT INTO `estados` (`id`, `nome`, `sigla`, `pais`, `created_at`, `updated_at`, `deleted_at`) VALUES
+INSERT INTO `Estados` (`id`, `nome`, `sigla`, `pais`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 'Acre', 'AC', 'Brasil', '2019-05-15 13:15:26', '2019-05-15 13:15:26', NULL),
 (2, 'Alagoas', 'AL', 'Brasil', '2019-05-15 13:15:26', '2019-05-15 13:15:26', NULL),
 (3, 'Amazonas', 'AM', 'Brasil', '2019-05-15 13:15:26', '2019-05-15 13:15:26', NULL),

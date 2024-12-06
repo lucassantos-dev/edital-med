@@ -2,9 +2,8 @@
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-// import { useState } from 'react'
+import { useState } from 'react'
 import { toast } from 'react-toastify'
-// import ReCAPTCHA from 'react-google-recaptcha'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { formSchema } from '@/zod-schema/schema'
@@ -15,10 +14,11 @@ import FormTerms from './FormTerms'
 import Image from 'next/image'
 import { Form } from '../ui/form'
 import submitCadastro, { prepareFormData } from '@/services/cadastroService'
-import { useState } from 'react'
+import Turnstile from 'react-turnstile'
+
 
 export default function CadastroForm() {
-  // const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -43,13 +43,14 @@ export default function CadastroForm() {
   const [isLoading, setIsLoading] = useState(false);
   async function onSubmit(values: z.infer<typeof formSchema>) {
    
-    // if (!recaptchaToken){
-    //   toast.error('Preencha o reCAPTCHA')
-    //   return
-    // }
+    if (!captchaToken){
+      toast.warning('Preencha o reCAPTCHA')
+      return
+    }
     try {
       setIsLoading(true);
       const formData = prepareFormData(values);
+      formData.append("turnstile_token", captchaToken);
       const response = await submitCadastro(formData);
       if (response.status === 201) {
         // Cadastro realizado com sucesso
@@ -78,7 +79,7 @@ export default function CadastroForm() {
         <div className="flex justify-center">
           <Image src="/Logo_Medlar.png" alt="Medlar Logo" width={200} height={200} className="mb-8" />
         </div>
-        <h2 className="text-3xl font-bold mb-8 text-center text-[#86b1e2]">Cadastro</h2>
+        {/* <h2 className="text-3xl font-bold mb-8 text-center text-[#86b1e2]">Cadastro</h2> */}
         {isLoading ? (
           <div className="flex justify-center">
             <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#4a79ad]"></div>
@@ -90,23 +91,40 @@ export default function CadastroForm() {
             <FormAddressData form={form} />
             <FormProfessionalData form={form}/>
             <FormTerms form={form.control} />
-            {/* <div className="flex justify-center">
-              <ReCAPTCHA
-                sitekey={String(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY)}
-                onChange={(token) => setRecaptchaToken(token)}
-                onExpired={() => setRecaptchaToken(null)}
-              />
-            </div> */}
-            <Button  type="submit" className="w-full bg-[#67a892] hover:bg-[#4a79ad] h-12 text-lg">
-              Cadastrar
-            </Button>
-            {/* <Button disabled={!recaptchaToken} type="submit" className="w-full bg-[#67a892] hover:bg-[#4a79ad] h-12 text-lg">
+             <div className="flex justify-center mt-4">
+                <Turnstile
+                  sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!} // Substitua com sua chave do site
+                  onVerify={(token) => setCaptchaToken(token)}
+                />
+              </div>
+            {/* <Button  type="submit" className="w-full bg-[#67a892] hover:bg-[#4a79ad] h-12 text-lg">
               Cadastrar
             </Button> */}
+            <Button disabled={!captchaToken} type="submit" className="w-full bg-[#67a892] hover:bg-[#4a79ad] h-12 text-lg">
+              Cadastrar
+            </Button>
           </form>
           </Form>
         )}
-        
+                  <div className="mt-8 text-center text-sm text-gray-600">
+          <p>Precisa de ajuda? Entre em contato conosco:</p>
+          <p className='p-1'>
+            <a
+              href="mailto:ti@medlarsaude.com.br"
+              className="text-[#67a892] hover:text-[#4a79ad] font-semibold"
+            >
+              ti@medlarsaude.com.br
+            </a>
+          </p>
+          <p className='p-1'>
+            <a
+              href="mailto:rh@medlarsaude.com.br"
+              className="text-[#67a892] hover:text-[#4a79ad] font-semibold"
+            >
+              rh@medlarsaude.com.br
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   )

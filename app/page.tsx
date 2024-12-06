@@ -74,9 +74,11 @@ export default function Home() {
               </div>
             </CardContent>
             <CardFooter>
+            <Link href="/Edital de captacao PJ.pdf" className=""> 
               <Button className="w-full bg-[#67a892] hover:bg-[#4a79ad]">
                 Download do Edital
               </Button>
+            </Link>
             </CardFooter>
           </Card>
         </div>

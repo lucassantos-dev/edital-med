@@ -55,8 +55,6 @@ model Estados {
   deletedAt DateTime? @map("deleted_at")
 
   cidades Cidades[] // Relacionamento com Cidades
-
-  @@map("estados")
 }
 
 model Cidades {
@@ -71,7 +69,6 @@ model Cidades {
   estado  Estados   @relation(fields: [idEstado], references: [id])
   Atuacao Atuacao[] // Relacionamento com Atuacao
 
-  @@map("cidades")
 }
 
 model Atuacao {

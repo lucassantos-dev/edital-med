@@ -42,7 +42,7 @@
 -- Extraindo dados da tabela `cidades`
 --
 
-INSERT INTO `cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `updated_at`, `deleted_at`) VALUES
+INSERT INTO `Cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 1, 'Brasiléia', '120010', '2019-05-15 13:15:26', '2019-05-15 13:15:26', NULL),
 (2, 1, 'Capixaba', '120017', '2019-05-15 13:15:26', '2019-05-15 13:15:26', NULL),
 (3, 1, 'Epitaciolândia', '120025', '2019-05-15 13:15:26', '2019-05-15 13:15:26', NULL),
@@ -635,7 +635,7 @@ INSERT INTO `cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `up
 (590, 9, 'Montes Claros De Goiás', '521370', '2019-05-15 13:15:26', '2019-05-15 13:15:26', NULL),
 (591, 9, 'Montividiu Do Norte', '521377', '2019-05-15 13:15:26', '2019-05-15 13:15:26', NULL),
 (592, 9, 'Morro Agudo De Goiás', '521385', '2019-05-15 13:15:26', '2019-05-15 13:15:26', NULL);
-INSERT INTO `cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `updated_at`, `deleted_at`) VALUES
+INSERT INTO `Cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (593, 9, 'Mossâmedes', '521390', '2019-05-15 13:15:26', '2019-05-15 13:15:26', NULL),
 (594, 9, 'Mundo Novo', '521405', '2019-05-15 13:15:26', '2019-05-15 13:15:26', NULL),
 (595, 9, 'Nazário', '521440', '2019-05-15 13:15:26', '2019-05-15 13:15:26', NULL),
@@ -1211,7 +1211,7 @@ INSERT INTO `cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `up
 (1165, 11, 'Santa Maria De Itabira', '315800', '2019-05-15 13:15:27', '2019-05-15 13:15:27', NULL),
 (1166, 11, 'Santa Maria Do Suaçuí', '315820', '2019-05-15 13:15:27', '2019-05-15 13:15:27', NULL),
 (1167, 11, 'Santa Rita De Ibitipoca', '315940', '2019-05-15 13:15:27', '2019-05-15 13:15:27', NULL);
-INSERT INTO `cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `updated_at`, `deleted_at`) VALUES
+INSERT INTO `Cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1168, 11, 'Santa Rita De Jacutinga', '315930', '2019-05-15 13:15:27', '2019-05-15 13:15:27', NULL),
 (1169, 11, 'Santa Rita Do Itueto', '315950', '2019-05-15 13:15:27', '2019-05-15 13:15:27', NULL),
 (1170, 11, 'Santana Da Vargem', '315830', '2019-05-15 13:15:27', '2019-05-15 13:15:27', NULL),
@@ -1781,7 +1781,7 @@ INSERT INTO `cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `up
 (1734, 17, 'Buriti Dos Montes', '220202', '2019-05-15 13:15:27', '2019-05-15 13:15:27', NULL),
 (1735, 17, 'Cajazeiras Do Piauí', '220207', '2019-05-15 13:15:27', '2019-05-15 13:15:27', NULL),
 (1736, 17, 'Cajueiro Da Praia', '220208', '2019-05-15 13:15:27', '2019-05-15 13:15:27', NULL);
-INSERT INTO `cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `updated_at`, `deleted_at`) VALUES
+INSERT INTO `Cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1737, 17, 'Campinas Do Piauí', '220210', '2019-05-15 13:15:27', '2019-05-15 13:15:27', NULL),
 (1738, 17, 'Campo Alegre Do Fidalgo', '220211', '2019-05-15 13:15:27', '2019-05-15 13:15:27', NULL),
 (1739, 17, 'Campo Largo Do Piauí', '220217', '2019-05-15 13:15:27', '2019-05-15 13:15:27', NULL),
@@ -2347,7 +2347,7 @@ INSERT INTO `cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `up
 (2299, 23, 'Cambará Do Sul', '430360', '2019-05-15 13:15:28', '2019-05-15 13:15:28', NULL),
 (2300, 23, 'Campina Das Missões', '430370', '2019-05-15 13:15:28', '2019-05-15 13:15:28', NULL),
 (2301, 23, 'Campo Bom', '430390', '2019-05-15 13:15:28', '2019-05-15 13:15:28', NULL);
-INSERT INTO `cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `updated_at`, `deleted_at`) VALUES
+INSERT INTO `Cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (2302, 23, 'Campo Novo', '430400', '2019-05-15 13:15:28', '2019-05-15 13:15:28', NULL),
 (2303, 23, 'Candelária', '430420', '2019-05-15 13:15:28', '2019-05-15 13:15:28', NULL),
 (2304, 23, 'Candiota', '430435', '2019-05-15 13:15:28', '2019-05-15 13:15:28', NULL),
@@ -2921,7 +2921,7 @@ INSERT INTO `cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `up
 (2872, 26, 'Guapiara', '351760', '2019-05-15 13:15:28', '2019-05-15 13:15:28', NULL),
 (2873, 26, 'Guaraçaí', '351780', '2019-05-15 13:15:28', '2019-05-15 13:15:28', NULL),
 (2874, 26, 'Guarani D`Oeste', '351800', '2019-05-15 13:15:28', '2019-05-15 13:15:28', NULL);
-INSERT INTO `cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `updated_at`, `deleted_at`) VALUES
+INSERT INTO `Cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (2875, 26, 'Guarantã', '351810', '2019-05-15 13:15:28', '2019-05-15 13:15:28', NULL),
 (2876, 26, 'Guararema', '351830', '2019-05-15 13:15:28', '2019-05-15 13:15:28', NULL),
 (2877, 26, 'Guareí', '351850', '2019-05-15 13:15:28', '2019-05-15 13:15:28', NULL),
@@ -3497,7 +3497,7 @@ INSERT INTO `cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `up
 (3447, 5, 'São Domingos', '292895', '2019-05-15 13:15:29', '2019-05-15 13:15:29', NULL),
 (3448, 5, 'São Félix Do Coribe', '292905', '2019-05-15 13:15:29', '2019-05-15 13:15:29', NULL),
 (3449, 5, 'São Gabriel', '292925', '2019-05-15 13:15:29', '2019-05-15 13:15:29', NULL);
-INSERT INTO `cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `updated_at`, `deleted_at`) VALUES
+INSERT INTO `Cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (3450, 5, 'São José Da Vitória', '292935', '2019-05-15 13:15:29', '2019-05-15 13:15:29', NULL),
 (3451, 5, 'São Sebastião Do Passé', '292950', '2019-05-15 13:15:29', '2019-05-15 13:15:29', NULL),
 (3452, 5, 'Saubara', '292975', '2019-05-15 13:15:29', '2019-05-15 13:15:29', NULL),
@@ -4070,7 +4070,7 @@ INSERT INTO `cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `up
 (4019, 11, 'Paiva', '314660', '2019-05-15 13:15:29', '2019-05-15 13:15:29', NULL),
 (4020, 11, 'Palmópolis', '314675', '2019-05-15 13:15:29', '2019-05-15 13:15:29', NULL),
 (4021, 11, 'ParÁ De Minas', '314710', '2019-05-15 13:15:29', '2019-05-15 13:15:29', NULL);
-INSERT INTO `cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `updated_at`, `deleted_at`) VALUES
+INSERT INTO `Cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (4022, 11, 'Paraisópolis', '314730', '2019-05-15 13:15:29', '2019-05-15 13:15:29', NULL),
 (4023, 11, 'Passa Quatro', '314760', '2019-05-15 13:15:29', '2019-05-15 13:15:29', NULL),
 (4024, 11, 'Passa Vinte', '314780', '2019-05-15 13:15:29', '2019-05-15 13:15:29', NULL),
@@ -4631,7 +4631,7 @@ INSERT INTO `cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `up
 (4579, 18, 'Cafeara', '410340', '2019-05-15 13:15:30', '2019-05-15 13:15:30', NULL),
 (4580, 18, 'Cafezal Do Sul', '410347', '2019-05-15 13:15:30', '2019-05-15 13:15:30', NULL),
 (4581, 18, 'Cambará', '410360', '2019-05-15 13:15:30', '2019-05-15 13:15:30', NULL);
-INSERT INTO `cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `updated_at`, `deleted_at`) VALUES
+INSERT INTO `Cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (4582, 18, 'Campina Da Lagoa', '410390', '2019-05-15 13:15:30', '2019-05-15 13:15:30', NULL),
 (4583, 18, 'Campina Grande Do Sul', '410400', '2019-05-15 13:15:30', '2019-05-15 13:15:30', NULL),
 (4584, 18, 'Campo Do Tenente', '410410', '2019-05-15 13:15:30', '2019-05-15 13:15:30', NULL),
@@ -5197,7 +5197,7 @@ INSERT INTO `cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `up
 (5144, 24, 'Lindóia Do Sul', '420985', '2019-05-15 13:15:30', '2019-05-15 13:15:30', NULL),
 (5145, 24, 'Luzerna', '421003', '2019-05-15 13:15:30', '2019-05-15 13:15:30', NULL),
 (5146, 24, 'Mafra', '421010', '2019-05-15 13:15:30', '2019-05-15 13:15:30', NULL);
-INSERT INTO `cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `updated_at`, `deleted_at`) VALUES
+INSERT INTO `Cidades` (`id`, `idEstado`, `nome`, `codigoIbge`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (5147, 24, 'Major Vieira', '421030', '2019-05-15 13:15:30', '2019-05-15 13:15:30', NULL),
 (5148, 24, 'Marema', '421055', '2019-05-15 13:15:30', '2019-05-15 13:15:30', NULL),
 (5149, 24, 'Matos Costa', '421070', '2019-05-15 13:15:30', '2019-05-15 13:15:30', NULL),

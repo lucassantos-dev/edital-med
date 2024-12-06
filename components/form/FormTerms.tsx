@@ -26,7 +26,7 @@ export default function FormTerms({ form }: { form: any }) {
             </FormLabel>
             <FormDescription className="leading-relaxed">
               Confirme que os dados estão corretos e que você está de acordo com os termos do
-              <Link href="/examples/forms" className="text-[#4a79ad] font-bold">EDITAL DE CAPTAÇÃO E SELEÇÃO PROFISSIONAL Nº 001/2024</Link>, que regulamenta a participação de profissionais da saúde no processo seletivo da MEDLAR - Soluções em Saúde.
+              <Link href="/Edital de captacao PJ.pdf" className="text-[#4a79ad] font-bold"> EDITAL DE CAPTAÇÃO E SELEÇÃO PROFISSIONAL Nº 001/2024</Link>, que regulamenta a participação de profissionais da saúde no processo seletivo da MEDLAR - Soluções em Saúde.
             </FormDescription>
           </div>
         </FormItem>

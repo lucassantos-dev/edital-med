@@ -41,7 +41,7 @@ export default function SectionUploadFile({ form }: SectionUploadFileProps) {
         name="documentos"
         id="documentos"
         title="Envie os documentos"
-        description={`Caso os arquivos não estejam compactados, você pode usar ferramentas online como o `}
+        description='Envie nos formatos .zip ou .rar'
       />
       <p className="text-sm text-gray-500">
         Caso os arquivos não estejam compactados, você pode usar ferramentas online como o{" "}
