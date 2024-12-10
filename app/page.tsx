@@ -73,8 +73,8 @@ export default function Home() {
                 <span>edital_vagas_medlar_2024.pdf</span>
               </div>
             </CardContent>
-            <CardFooter>
-            <Link href="/Edital de captacao PJ.pdf" className=""> 
+            <CardFooter  className="justify-center flex">
+            <Link href="/Edital-de-captacao-PJ.pdf"> 
               <Button className="w-full bg-[#67a892] hover:bg-[#4a79ad]">
                 Download do Edital
               </Button>

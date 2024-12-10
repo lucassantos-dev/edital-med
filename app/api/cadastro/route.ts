@@ -1,15 +1,19 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma'; // Configuração do Prisma
-import fs from 'fs';
-import path from 'path';
 import { SenDEmail } from '@/lib/email';
+import { v2 as cloudinary } from 'cloudinary';
 
-const BASE_UPLOAD_DIR = path.join(process.cwd(), 'uploads');  
 
-const TURNSTILE_SECRET_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SECRET_KEY 
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-const getUploadDir = (cnpj_cpf: string) => path.join(BASE_UPLOAD_DIR, cnpj_cpf);
+
+const TURNSTILE_SECRET_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SECRET_KEY;
+
+// const getUploadDir = (cnpj_cpf: string) => path.join(process.cwd(), 'uploads');
 
 async function verifyTurnstileToken(token: string): Promise<boolean> {
   const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
@@ -20,8 +24,8 @@ async function verifyTurnstileToken(token: string): Promise<boolean> {
     }),
   });
 
-  const data:any = await response.json();
-  return data.success; // Retorna verdadeiro se o token for válido
+  const data: any = await response.json();
+  return data.success;
 }
 
 export async function POST(req: Request) {
@@ -72,9 +76,9 @@ export async function POST(req: Request) {
     if (existingCandidato) {
       return NextResponse.json(
         { message: `Já existe um candidato cadastrado com o CPF/CNPJ ${cnpj_cpf}` },
-        { status: 204 }
+        { status: 409 } // Usando 409 Conflict para indicar que já existe um candidato com esse CPF/CNPJ
       );
-    }
+    } 
 
     // 6. Salva os dados do candidato no banco
     const novoCandidato = await prisma.candidatos.create({
@@ -106,36 +110,44 @@ export async function POST(req: Request) {
       });
     }
 
-    // 8. Criação do diretório do candidato
-    const candidatoDir = getUploadDir(cnpj_cpf.replace(/[^\d]/g, ""));  // Diretório exclusivo para o candidato
-    if (!fs.existsSync(candidatoDir)) {
-      fs.mkdirSync(candidatoDir, { recursive: true });
+    // 8. Processa e salva os arquivos no Cloudinary
+const arquivoCompactado = formData.get("documentos") as File;
+
+if (arquivoCompactado) {
+  const buffer = Buffer.from(await arquivoCompactado.arrayBuffer());
+
+  const uploadResponse = await cloudinary.uploader.upload_stream(
+    { resource_type: 'raw' }, // Define o tipo de recurso como 'raw' para arquivos ZIP
+    async (error, result) => {
+      if (error) {
+        console.error('Erro no upload para o Cloudinary:', error);
+        throw new Error('Erro ao fazer upload para o Cloudinary');
+      }
+      console.log('Arquivo enviado para o Cloudinary:', result);
+  
+      // Salvar apenas a URL no banco de dados
+      if (result && result.secure_url) {
+        // Agora, você pode salvar a URL no banco de dados
+        await prisma.arquivos.create({
+          data: {
+            candidatoId: novoCandidato.id,  // Assumindo que novoCandidato.id está disponível
+            nomeArquivo: arquivoCompactado.name,  // Nome do arquivo (se necessário)
+            caminhoArquivo: result.secure_url,  // URL do arquivo no Cloudinary
+          },
+        });
+      }
     }
-
-    // 9. Processa e salva os arquivos de upload
-    const arquivoCompactado = formData.get("documentos") as File;
-
-    if (arquivoCompactado) {
-      const fileName = `documentacao-${Date.now()}.zip`;
-      const filePath = path.join(candidatoDir, fileName);
-
-      const buffer = Buffer.from(await arquivoCompactado.arrayBuffer());
-      fs.writeFileSync(filePath, buffer);
-
-      // Salva no banco de dados
-      await prisma.arquivos.create({
-        data: {
-          candidatoId: novoCandidato.id,
-          nomeArquivo: fileName,
-          caminhoArquivo: `/uploads/${cnpj_cpf.replace(/[^\d]/g, "")}/${fileName}`,
-        },
-      });
-    }
-
-    // 10. Envia email de confirmação
+  );
+  
+  uploadResponse.end(buffer); // Finaliza o upload do arquivo
+  
+} else{
+  console.log('Arquivo nao encontrado')
+}
+    // 9. Envia email de confirmação
     await SenDEmail({ data: novoCandidato });
 
-    // 11. Retorna sucesso
+    // 10. Retorna sucesso
     return NextResponse.json({ message: 'Cadastro realizado com sucesso', candidato: novoCandidato }, { status: 201 });
 
   } catch (error: any) {

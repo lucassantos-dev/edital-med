@@ -1,48 +1,5 @@
--- phpMyAdmin SQL Dump
--- version 4.9.2
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Tempo de geração: 03-Dez-2024 às 17:32
--- Versão do servidor: 10.4.10-MariaDB
--- versão do PHP: 7.3.12
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Banco de dados: `selectjob`
---
-
--- --------------------------------------------------------
-
---
--- Estrutura da tabela `estados`
---
-
--- CREATE TABLE `estados` (
---   `id` int(10) UNSIGNED NOT NULL,
---   `nome` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
---   `sigla` varchar(2) COLLATE utf8_unicode_ci NOT NULL,
---   `pais` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
---   `created_at` timestamp NULL DEFAULT NULL,
---   `updated_at` timestamp NULL DEFAULT NULL,
---   `deleted_at` timestamp NULL DEFAULT NULL
--- ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --
--- -- Extraindo dados da tabela `estados`
--- --
-
-INSERT INTO `Estados` (`id`, `nome`, `sigla`, `pais`, `created_at`, `updated_at`, `deleted_at`) VALUES
+INSERT INTO "Estados" ("id", "nome", "sigla", "pais", "created_at", "updated_at", "deleted_at") VALUES
 (1, 'Acre', 'AC', 'Brasil', '2019-05-15 13:15:26', '2019-05-15 13:15:26', NULL),
 (2, 'Alagoas', 'AL', 'Brasil', '2019-05-15 13:15:26', '2019-05-15 13:15:26', NULL),
 (3, 'Amazonas', 'AM', 'Brasil', '2019-05-15 13:15:26', '2019-05-15 13:15:26', NULL),
@@ -76,20 +33,20 @@ INSERT INTO `Estados` (`id`, `nome`, `sigla`, `pais`, `created_at`, `updated_at`
 --
 
 --
--- Índices para tabela `estados`
+-- Índices para tabela "estados"
 --
--- ALTER TABLE `estados`
---   ADD PRIMARY KEY (`id`);
+-- ALTER TABLE "estados"
+--   ADD PRIMARY KEY ("id");
 
 --
 -- AUTO_INCREMENT de tabelas despejadas
 --
 
 --
--- AUTO_INCREMENT de tabela `estados`
+-- AUTO_INCREMENT de tabela "estados"
 --
--- ALTER TABLE `estados`
---   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+-- ALTER TABLE "estados"
+--   MODIFY "id" int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 -- COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
