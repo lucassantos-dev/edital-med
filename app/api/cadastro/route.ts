@@ -124,7 +124,7 @@ if (arquivoCompactado) {
         throw new Error('Erro ao fazer upload para o Cloudinary');
       }
       console.log('Arquivo enviado para o Cloudinary:', result);
-  
+      //
       // Salvar apenas a URL no banco de dados
       if (result && result.secure_url) {
         // Agora, você pode salvar a URL no banco de dados
