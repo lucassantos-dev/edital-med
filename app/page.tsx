@@ -57,7 +57,7 @@ export default function Home() {
                    (sem pendências financeiras).</li>
                   <li>2.2 Os profissionais selecionados firmaram vínculo de prestação de serviço não empregatício junto a MEDLAR.</li>
                   <li>2.3 Para participar, os profissionais ou pessoas jurídicas interessados, deverão apresentar toda a documentação 
-                  solicitada neste edital até 31/12/2024.</li>
+                  solicitada neste edital até 31/03/2025.</li>
 
               </ul>
             </CardContent>
