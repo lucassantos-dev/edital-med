@@ -36,13 +36,13 @@ export default function Home() {
         </div>
         </div>
         <div className="grid md:grid-cols-2 gap-8 mb-12">
-          <Card className="bg-white/90 text-gray-800">
+          <Card className="bg-white/90 text-gray-800 text-center">
             <CardHeader>
               <CardTitle className="text-[#4a79ad]">Informações do Edital</CardTitle>
               <CardDescription>Detalhes sobre as vagas disponíveis na Medlar</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="mb-4">
+              <p className="mb-4 text-center">
               A MEDLAR Soluções em Saúde leva ao conhecimento dos interessados o 
               presente processo de captação e seleção de pessoas físicas ou jurídicas: <span className='text-teal-600 font-semibold'>enfermeiros, médicos, fisioterapeutas, 
               fonoaudiólogos, psicólogos,  terapeutas ocupacionais, nutricionistas,</span> interessados na prestação de serviços em atenção 
@@ -51,7 +51,7 @@ export default function Home() {
               nas condições estabelecidas neste edital e seus anexos.
               </p>
                 <span> 2. DAS CONDIÇÕES DE PARTICIPAÇÃO</span> 
-              <ul className="list-disc list-inside mb-4">
+              <ul className="list-disc list-inside mb-4 text-center">
                  <li> 2.1 Somente serão admitidos a participar deste processo de captação e seleção profissionais de saúde autônomos ou pessoas 
                   jurídicas que comprovem regularidade junto ao conselho de classe da categoria
                    (sem pendências financeiras).</li>
@@ -62,9 +62,9 @@ export default function Home() {
               </ul>
             </CardContent>
           </Card>
-          <Card className="bg-white/90 text-gray-800">
+          <Card className="bg-white/90 text-gray-800  text-center">
             <CardHeader>
-              <CardTitle className="text-[#67a892]">Arquivo do Edital</CardTitle>
+              <CardTitle className="text-[#67a892] text-center">Arquivo do Edital</CardTitle>
               <CardDescription>Faça o download do edital completo</CardDescription>
             </CardHeader>
             <CardContent>
