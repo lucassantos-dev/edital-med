@@ -42,7 +42,7 @@ export default function Home() {
               <CardDescription>Detalhes sobre as vagas disponíveis na Medlar</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="mb-4 text-center">
+              <p className="mb-4 text-justify">
               A MEDLAR Soluções em Saúde leva ao conhecimento dos interessados o 
               presente processo de captação e seleção de pessoas físicas ou jurídicas: <span className='text-teal-600 font-semibold'>enfermeiros, médicos, fisioterapeutas, 
               fonoaudiólogos, psicólogos,  terapeutas ocupacionais, nutricionistas,</span> interessados na prestação de serviços em atenção 
