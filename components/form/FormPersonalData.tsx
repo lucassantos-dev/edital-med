@@ -1,12 +1,23 @@
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { CustomInput } from '../CustomInput';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { Switch } from '../ui/switch';
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { CustomInput } from '../CustomInput'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select'
+import { Switch } from '../ui/switch'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function FormPersonalData({ form }: { form: any }) {
-  
   return (
     <>
       <h2 className="text-xl font-bold mb-8 text-[#4a79ad]">Dados Pessoais</h2>
@@ -20,7 +31,9 @@ export default function FormPersonalData({ form }: { form: any }) {
             <FormControl>
               <Input placeholder="Seu nome completo" {...field} className="" />
             </FormControl>
-            {fieldState?.error && <FormMessage>{fieldState.error.message}</FormMessage>}
+            {fieldState?.error && (
+              <FormMessage>{fieldState.error.message}</FormMessage>
+            )}
           </FormItem>
         )}
       />
@@ -35,37 +48,37 @@ export default function FormPersonalData({ form }: { form: any }) {
                 <span>CNPJ</span>
               </div>
               <FormControl>
-              <Switch
-                checked={field.value}
-                onCheckedChange={field.onChange}
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
                 />
               </FormControl>
-              <div className='p-1 flex'>
+              <div className="p-1 flex">
                 <span>CPF</span>
               </div>
             </FormItem>
           )}
         />
       </div>
-      {form.getValues("isCpf") ? (
+      {form.getValues('isCpf') ? (
         <CustomInput
-          labelText='CPF'
+          labelText="CPF"
           control={form.control}
-          registerName='cnpj_cpf'
-          textlabel='xxx.xxx.xxx-xx'
-          placeholder='xxx.xxx.xxx-xx'
+          registerName="cnpj_cpf"
+          textlabel="xxx.xxx.xxx-xx"
+          placeholder="xxx.xxx.xxx-xx"
           type="text"
-          maskName='cpf'
+          maskName="cpf"
         />
       ) : (
         <CustomInput
-          labelText='CNPJ'
+          labelText="CNPJ"
           control={form.control}
-          registerName='cnpj_cpf'
-          textlabel='xx.xxx.xxx/xxxx-xx'
-          placeholder='xx.xxx.xxx/xxxx-xx'
+          registerName="cnpj_cpf"
+          textlabel="xx.xxx.xxx/xxxx-xx"
+          placeholder="xx.xxx.xxx/xxxx-xx"
           type="text"
-          maskName='cnpj'
+          maskName="cnpj"
         />
       )}
 
@@ -77,20 +90,28 @@ export default function FormPersonalData({ form }: { form: any }) {
             <FormItem>
               <FormLabel className="">Idade</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="Idade" {...field} onChange={(e) => field.onChange(parseInt(e.target.value, 10))} className="" />
+                <Input
+                  type="number"
+                  placeholder="Idade"
+                  {...field}
+                  onChange={(e) => field.onChange(parseInt(e.target.value, 10))}
+                  className=""
+                />
               </FormControl>
-              {fieldState?.error && <FormMessage>{fieldState.error.message}</FormMessage>}
+              {fieldState?.error && (
+                <FormMessage>{fieldState.error.message}</FormMessage>
+              )}
             </FormItem>
           )}
         />
         <CustomInput
-          labelText='Telefone'
+          labelText="Telefone"
           control={form.control}
-          registerName='telefone'
-          textlabel='(xx) xxxxx-xxxx'
-          placeholder='(xx) xxxxx-xxxx'
+          registerName="telefone"
+          textlabel="(xx) xxxxx-xxxx"
+          placeholder="(xx) xxxxx-xxxx"
           type="text"
-          maskName='contact_phone'
+          maskName="contact_phone"
         />
         <FormField
           control={form.control}
@@ -121,13 +142,20 @@ export default function FormPersonalData({ form }: { form: any }) {
             <FormItem>
               <FormLabel className="">Email</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="Email" {...field} className="" />
+                <Input
+                  type="email"
+                  placeholder="Email"
+                  {...field}
+                  className=""
+                />
               </FormControl>
-              {fieldState?.error && <FormMessage>{fieldState.error.message}</FormMessage>}
+              {fieldState?.error && (
+                <FormMessage>{fieldState.error.message}</FormMessage>
+              )}
             </FormItem>
           )}
         />
       </div>
     </>
-  );
+  )
 }

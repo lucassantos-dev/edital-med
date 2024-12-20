@@ -1,45 +1,67 @@
-import React from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
-import type { Cidades } from "@prisma/client";
-import { Control, useFormContext } from "react-hook-form";
+import React from 'react'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './ui/select'
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from './ui/form'
+import type { Cidades } from '@prisma/client'
+import { Control, useFormContext } from 'react-hook-form'
 
 interface CidadesSelectProps {
-  cidades: Cidades[];
-  name: string;
+  cidades: Cidades[]
+  name: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  control: Control<any>;
-  label: string;
+  control: Control<any>
+  label: string
 }
 
-export const CidadesSelect = ({ cidades, name, control, label }: CidadesSelectProps) => {
-  const { setValue, watch } = useFormContext();
-  const selectedCities = watch(name) || []; // Obter cidades selecionadas do formulário
+export const CidadesSelect = ({
+  cidades,
+  name,
+  control,
+  label,
+}: CidadesSelectProps) => {
+  const { setValue, watch } = useFormContext()
+  const selectedCities = watch(name) || [] // Obter cidades selecionadas do formulário
 
   const handleSelect = (cidadeId: number) => {
-    const cidadeSelecionada = cidades.find((cidade) => cidade.id === cidadeId);
+    const cidadeSelecionada = cidades.find((cidade) => cidade.id === cidadeId)
 
-    if (!cidadeSelecionada) return;
+    if (!cidadeSelecionada) return
 
     // Verifica se já foi selecionada ou se o limite foi atingido
-    if (selectedCities.some((cidade: Cidades) => cidade.id === cidadeId) || selectedCities.length >= 3) {
-      return;
+    if (
+      selectedCities.some((cidade: Cidades) => cidade.id === cidadeId) ||
+      selectedCities.length >= 3
+    ) {
+      return
     }
 
     // Atualizar o valor no formulário
-    setValue(name, [...selectedCities, cidadeSelecionada]);
-  };
+    setValue(name, [...selectedCities, cidadeSelecionada])
+  }
 
   const removeCity = (cidadeId: number) => {
-    const updatedCities = selectedCities.filter((cidade: Cidades) => cidade.id !== cidadeId);
-    setValue(name, updatedCities);
-  };
+    const updatedCities = selectedCities.filter(
+      (cidade: Cidades) => cidade.id !== cidadeId,
+    )
+    setValue(name, updatedCities)
+  }
 
   return (
     <FormField
       control={control}
       name={name}
-      render={({  fieldState }) => (
+      render={({ fieldState }) => (
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
@@ -58,7 +80,9 @@ export const CidadesSelect = ({ cidades, name, control, label }: CidadesSelectPr
           </FormControl>
           {selectedCities.length > 0 && (
             <div className="mt-4">
-              <h4 className="font-medium text-[#4a79ad]">Cidades selecionadas:</h4>
+              <h4 className="font-medium text-[#4a79ad]">
+                Cidades selecionadas:
+              </h4>
               <ul className="mt-2 space-y-1">
                 {selectedCities.map((cidade: Cidades) => (
                   <li
@@ -82,9 +106,11 @@ export const CidadesSelect = ({ cidades, name, control, label }: CidadesSelectPr
               )}
             </div>
           )}
-          {fieldState.error && <FormMessage>{fieldState.error.message}</FormMessage>}
+          {fieldState.error && (
+            <FormMessage>{fieldState.error.message}</FormMessage>
+          )}
         </FormItem>
       )}
     />
-  );
-};
+  )
+}

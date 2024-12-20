@@ -1,5 +1,4 @@
-import { Facebook, Instagram } from "lucide-react";
-
+import { Facebook, Instagram } from 'lucide-react'
 
 export default function Footer() {
   return (
@@ -15,7 +14,7 @@ export default function Footer() {
             rel="noopener noreferrer"
             className="text-stone-700 hover:text-[#67a892] transition duration-300"
           >
-            <Instagram  size={20} />
+            <Instagram size={20} />
           </a>
           <a
             href="https://facebook.com/medlarsaude"
@@ -35,7 +34,10 @@ export default function Footer() {
           </a> */}
         </div>
         <div className="mt-4 text-xs">
-          <p>&copy; {new Date().getFullYear()} Medlar Saúde. Todos os direitos reservados.</p>
+          <p>
+            &copy; {new Date().getFullYear()} Medlar Saúde. Todos os direitos
+            reservados.
+          </p>
         </div>
       </div>
     </footer>

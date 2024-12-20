@@ -1,11 +1,22 @@
-import { fetchCargos } from "@/lib/utils";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
-import { Input } from "../ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { useEffect, useState } from "react";
-import type { Cargos } from "@prisma/client";
-import SectionUploadFile from "./SectionUploadFilesCnpj";
-
+import { fetchCargos } from '@/lib/utils'
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '../ui/form'
+import { Input } from '../ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select'
+import { useEffect, useState } from 'react'
+import type { Cargos } from '@prisma/client'
+import SectionUploadFile from './SectionUploadFilesCnpj'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function FormProfessionalData({ form }: { form: any }) {
@@ -14,16 +25,18 @@ export default function FormProfessionalData({ form }: { form: any }) {
 
   useEffect(() => {
     async function loadCargos() {
-      setIsLoading(true);
-      const fetchedCargos = await fetchCargos();
-      setCargos(fetchedCargos);
-      setIsLoading(false);
+      setIsLoading(true)
+      const fetchedCargos = await fetchCargos()
+      setCargos(fetchedCargos)
+      setIsLoading(false)
     }
-    loadCargos();
+    loadCargos()
   }, [])
   return (
     <>
-      <h2 className="text-xl font-bold mb-8  text-[#4a79ad]">Dados Profissionais</h2>
+      <h2 className="text-xl font-bold mb-8  text-[#4a79ad]">
+        Dados Profissionais
+      </h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <FormField
           control={form.control}
@@ -51,7 +64,9 @@ export default function FormProfessionalData({ form }: { form: any }) {
           name="experiencia"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="">Possui experiência na sua área?</FormLabel>
+              <FormLabel className="">
+                Possui experiência na sua área?
+              </FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className="">
@@ -99,7 +114,9 @@ export default function FormProfessionalData({ form }: { form: any }) {
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder={isLoading ? 'Carregando...' : 'Selecione'} />
+                    <SelectValue
+                      placeholder={isLoading ? 'Carregando...' : 'Selecione'}
+                    />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -128,22 +145,26 @@ export default function FormProfessionalData({ form }: { form: any }) {
                   {...field}
                   value={field.value || ''}
                   onChange={(e) => {
-                    const valor = parseFloat(e.target.value);
-                    const cargoSelecionado = cargos.find((cargo) => cargo.nome === form.watch('cargo'));
-                    const maxValue = cargoSelecionado?.valor_medio || 0;
+                    const valor = parseFloat(e.target.value)
+                    const cargoSelecionado = cargos.find(
+                      (cargo) => cargo.nome === form.watch('cargo'),
+                    )
+                    const maxValue = cargoSelecionado?.valor_medio || 0
 
                     if (valor > maxValue) {
                       form.setError('valor', {
                         message: `O valor máximo permitido para ${cargoSelecionado?.nome} é R$ ${maxValue.toFixed(2)}`,
-                      });
+                      })
                     } else {
-                      form.clearErrors('valor');
+                      form.clearErrors('valor')
                     }
-                    field.onChange(valor);
+                    field.onChange(valor)
                   }}
                 />
               </FormControl>
-              {fieldState?.error && <FormMessage>{fieldState.error.message}</FormMessage>}
+              {fieldState?.error && (
+                <FormMessage>{fieldState.error.message}</FormMessage>
+              )}
             </FormItem>
           )}
         />
