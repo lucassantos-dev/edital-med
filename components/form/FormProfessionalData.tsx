@@ -51,7 +51,7 @@ export default function FormProfessionalData({ form }: { form: any }) {
           name="experiencia"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="">Possui experiencia no cargo?</FormLabel>
+              <FormLabel className="">Possui experiência na sua área?</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className="">
@@ -95,7 +95,7 @@ export default function FormProfessionalData({ form }: { form: any }) {
           name="cargo"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Cargo</FormLabel>
+              <FormLabel>Categoria peofissional</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>

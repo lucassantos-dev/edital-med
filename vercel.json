@@ -1,0 +1,5 @@
+{
+  "redirects": [
+      { "source": "/edital/", "destination": "/", "permanent": true }
+  ]
+}
