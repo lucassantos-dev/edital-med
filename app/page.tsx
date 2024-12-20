@@ -98,17 +98,18 @@ export default function Home() {
                 <p className="mb-4 text-justify">
                   A MEDLAR Soluções em Saúde leva ao conhecimento dos
                   interessados o presente processo de captação e seleção de
-                  pessoas físicas ou jurídicas:{' '}
+                  pessoas físicas ou jurídicas com atuação na seguintes áreas
+                  profissionais:{' '}
                   <span className="text-teal-600 font-semibold">
-                    enfermeiros, médicos, fisioterapeutas, fonoaudiólogos,
-                    psicólogos, terapeutas ocupacionais, nutricionistas,
+                    enfermagem, medicina, fisioterapia, fonoaudiologia,
+                    psicologia, terapia ocupacional e nutrição
                   </span>{' '}
-                  interessados na prestação de serviços em atenção domiciliar
-                  nas modalidades de gerenciamento e internação domiciliar aos
-                  diversos clientes que necessitem de assistência domiciliar nas
-                  cidades de médio porte dos estados e municípios dos estados
-                  Norte e Nordeste brasileiro, nas condições estabelecidas neste
-                  edital e seus anexos.
+                  para prestação de serviços em atenção domiciliar nas
+                  modalidades de gerenciamento e internação domiciliar aos
+                  diversos clientes que necessitem de assistência domiciliar nos
+                  mais diversos municípios dos estados da região Norte e
+                  Nordeste brasileiro, nas condições estabelecidas neste edital
+                  e seus anexos.
                 </p>
                 <span> 2. DAS CONDIÇÕES DE PARTICIPAÇÃO</span>
                 <ul className="list-disc list-inside mb-4 text-justify">
