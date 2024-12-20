@@ -11,7 +11,7 @@ datasource db {
 model Candidatos {
   id                  Int       @id @default(autoincrement())
   nome                String
-  cnpj_cpf            String    @unique
+  cnpjCpf             String    @unique
   telefone            String
   sexo                String
   especializacao      String?
@@ -31,7 +31,7 @@ model Candidatos {
   atuacoes            Atuacao[]
 
   @@index([email])
-  @@index([cnpj_cpf])
+  @@index([cnpjCpf])
 }
 
 model Arquivos {
@@ -82,4 +82,12 @@ model Cargos {
   id          Int    @id @default(autoincrement())
   nome        String @unique
   valor_medio Float
+}
+
+model Usuarios {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

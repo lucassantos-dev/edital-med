@@ -1,8 +1,7 @@
-import CadastroForm from "@/components/form/CadastroForm";
+import CadastroForm from '@/components/form/CadastroForm'
 
-export default function page(){
-  return(
-
+export default function page() {
+  return (
     <>
       <CadastroForm />
     </>

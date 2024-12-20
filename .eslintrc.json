@@ -1,6 +1,6 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"],
-  "rules": {
-    "@typescript-eslint/no-explicit-any": "off" // Desativa a regra para todo o projeto
-  }
+  "extends": [
+    "@rocketseat/eslint-config/next", 
+    "next/core-web-vitals"
+  ]
 }

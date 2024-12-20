@@ -1,14 +1,14 @@
-import type { UseFormReturn } from "react-hook-form";
-import FileUpload from "../InputFile";
-import type { formSchema } from "@/zod-schema/schema";
-import type { z } from "zod";
+import type { UseFormReturn } from 'react-hook-form'
+import FileUpload from '../InputFile'
+import type { formSchema } from '@/zod-schema/schema'
+import type { z } from 'zod'
 
 interface SectionUploadFileProps {
-  form: UseFormReturn<z.infer<typeof formSchema>>;
+  form: UseFormReturn<z.infer<typeof formSchema>>
 }
 
 export default function SectionUploadFile({ form }: SectionUploadFileProps) {
-  const { isCpf } = form.watch();
+  const { isCpf } = form.watch()
 
   return (
     <div className="space-y-4">
@@ -41,10 +41,11 @@ export default function SectionUploadFile({ form }: SectionUploadFileProps) {
         name="documentos"
         id="documentos"
         title="Envie os documentos"
-        description='Envie nos formatos .zip ou .rar'
+        description="Envie nos formatos .zip ou .rar"
       />
       <p className="text-sm text-gray-500">
-        Caso os arquivos não estejam compactados, você pode usar ferramentas online como o{" "}
+        Caso os arquivos não estejam compactados, você pode usar ferramentas
+        online como o{' '}
         <a
           href="https://smallpdf.com/pt/comprimir-pdf"
           target="_blank"
@@ -52,9 +53,9 @@ export default function SectionUploadFile({ form }: SectionUploadFileProps) {
           className="text-green-500 font-bold"
         >
           Smallpdf
-        </a>{" "}
+        </a>{' '}
         para comprimi-los antes de fazer o upload.
       </p>
     </div>
-  );
+  )
 }

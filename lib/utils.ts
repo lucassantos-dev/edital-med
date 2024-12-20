@@ -1,123 +1,112 @@
-import type { Candidatos, Cargos } from "@prisma/client";
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
-import type { Cidades } from "@prisma/client";
-
-
+import type { formSchema } from '@/zod-schema/schema'
+import type { Candidatos, Cargos, Cidades } from '@prisma/client'
+import { clsx, type ClassValue } from 'clsx'
+import type { UseFormReturn } from 'react-hook-form'
+import { twMerge } from 'tailwind-merge'
+import type { z } from 'zod'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
 export function validatorCNPJ(cnpj: string): boolean {
-  // Remove caracteres não numéricos
-  cnpj = cnpj.replace(/[^\d]+/g, '');
-
-  if (cnpj.length !== 14) return false;
-
-  // Elimina CNPJs com todos os números iguais (ex.: "11111111111111")
-  if (/^(\d)\1+$/.test(cnpj)) return false;
-
-  // Validação dos dígitos verificadores
+  cnpj = cnpj.replace(/[^\d]+/g, '')
+  if (cnpj.length !== 14) return false
+  if (/^(\d)\1+$/.test(cnpj)) return false
   const validarDigito = (cnpj: string, posicoes: number[]) => {
     const soma = cnpj
       .slice(0, posicoes.length)
       .split('')
-      .reduce((acc, digit, i) => acc + parseInt(digit) * posicoes[i], 0);
+      .reduce((acc, digit, i) => acc + parseInt(digit) * posicoes[i], 0)
 
-    const resto = soma % 11;
-    return resto < 2 ? 0 : 11 - resto;
-  };
-
-  const digitosVerificadores = cnpj.slice(-2);
-
-  // Primeiro dígito verificador
-  const primeiroDigito = validarDigito(cnpj, [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
-  if (parseInt(digitosVerificadores[0]) !== primeiroDigito) return false;
-
-  // Segundo dígito verificador
-  const segundoDigito = validarDigito(cnpj, [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
-  if (parseInt(digitosVerificadores[1]) !== segundoDigito) return false;
-
-  return true;
+    const resto = soma % 11
+    return resto < 2 ? 0 : 11 - resto
+  }
+  const digitosVerificadores = cnpj.slice(-2)
+  const primeiroDigito = validarDigito(
+    cnpj,
+    [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2],
+  )
+  if (parseInt(digitosVerificadores[0]) !== primeiroDigito) return false
+  const segundoDigito = validarDigito(
+    cnpj,
+    [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2],
+  )
+  if (parseInt(digitosVerificadores[1]) !== segundoDigito) return false
+  return true
 }
 
-export function validateValor(valor: number, cargo: string, cargos: Cargos[]): string | true {
-  const cargoSelecionado = cargos.find((c) => c.nome === cargo);
-  if (!cargoSelecionado) return 'Selecione um cargo válido';
+export function validateValor(
+  valor: number,
+  cargo: string,
+  cargos: Cargos[],
+): string | true {
+  const cargoSelecionado = cargos.find((c) => c.nome === cargo)
+  if (!cargoSelecionado) return 'Selecione um cargo válido'
 
   if (valor > cargoSelecionado.valor_medio) {
-    return `O valor máximo permitido para ${cargoSelecionado.nome} é R$ ${cargoSelecionado.valor_medio.toFixed(2)}`;
+    return `O valor máximo permitido para ${cargoSelecionado.nome} é R$ ${cargoSelecionado.valor_medio.toFixed(2)}`
   }
-  return true;
+  return true
 }
 
-export async function fetchCargos(): Promise<Cargos[]>{
+export async function fetchCargos(): Promise<Cargos[]> {
   try {
     const response = await fetch('/api/cargos')
     const data = await response.json()
     return data.cargos
-  } catch(erro){
+  } catch (erro) {
     console.log(erro)
     return []
   }
 }
 
-// export const cargosValores = {
-//   enfermeiro: 30,
-//   medico: 50,
-//   auxiliar: 20,
-//   fisioterapeuta: 35,
-//   nutricionista: 25,
-// } as const;
-
-// export type Cargo = keyof typeof cargosValores;
-
-
 export const handlerCidade = async (
   uf: string,
-  setCidades: (cidades: Cidades[]) => void
+  setCidades: (cidades: Cidades[]) => void,
 ) => {
   try {
-    const response = await fetch(`/api/cidades?uf=${uf}`);
-    const data = await response.json();
-    setCidades(data.cidades || []);
+    const response = await fetch(`/api/cidades?uf=${uf}`)
+    const data = await response.json()
+    setCidades(data.cidades || [])
   } catch (error) {
-    console.error("Erro ao buscar cidades:", error);
-    setCidades([]);
+    console.error('Erro ao buscar cidades:', error)
+    setCidades([])
   }
-};
+}
 
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const handleCepChange = async (cep: string, setCepLoading: (loading: boolean) => void, form: any,setCidades: (cidades: Cidades[]) => void ) => {
+export const handleCepChange = async (
+  cep: string,
+  setCepLoading: (loading: boolean) => void,
+  form: UseFormReturn<z.infer<typeof formSchema>>,
+  setCidades: (cidades: Cidades[]) => void,
+) => {
   if (cep.length === 8) {
-    setCepLoading(true);
+    setCepLoading(true)
     try {
-      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-      const data = await response.json();
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`)
+      const data = await response.json()
       if (data.erro) {
-        console.log('CEP não encontrado.');
-        form.setValue('cidade', '');
-        form.setValue('estado', '');
+        console.log('CEP não encontrado.')
+        form.setValue('cidade', '')
+        form.setValue('estado', '')
       } else {
         // Atualiza os campos de cidade e estado
-        form.setValue('cidade', data.localidade || '');
-        form.setValue('estado', data.uf || '');
+        form.setValue('cidade', data.localidade || '')
+        form.setValue('estado', data.uf || '')
 
         handlerCidade(data.uf, setCidades)
       }
     } catch (error) {
-      console.log('Erro ao buscar o CEP. Tente novamente.' + error);
+      console.log('Erro ao buscar o CEP. Tente novamente.' + error)
     } finally {
-      setCepLoading(false);
+      setCepLoading(false)
     }
   } else {
-    form.setValue('cidade', '');
-    form.setValue('estado', '');
+    form.setValue('cidade', '')
+    form.setValue('estado', '')
   }
-};
-
+}
 
 export function generateCandidateEmailTemplate(nome: string): string {
   return `
@@ -181,7 +170,7 @@ export function generateCandidateEmailTemplate(nome: string): string {
   </div>
 </body>
 </html>
-  `;
+  `
 }
 
 export function generateRHTemplate(data: Candidatos): string {
@@ -289,5 +278,5 @@ export function generateRHTemplate(data: Candidatos): string {
   </div>
 </body>
 </html>
-  `;
+  `
 }
