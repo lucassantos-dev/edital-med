@@ -114,7 +114,6 @@ export default function Home() {
                 <span> 2. DAS CONDIÇÕES DE PARTICIPAÇÃO</span>
                 <ul className="list-disc list-inside mb-4 text-justify">
                   <li>
-                    {' '}
                     2.1 Somente serão admitidos a participar deste processo de
                     captação e seleção profissionais de saúde autônomos ou
                     pessoas jurídicas que comprovem regularidade junto ao
