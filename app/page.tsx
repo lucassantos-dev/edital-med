@@ -115,20 +115,17 @@ export default function Home() {
                 <ul className="list-disc list-inside mb-4 text-justify">
                   <li>
                     {' '}
-                    2.1 Somente serão admitidos a participar deste processo de
-                    captação e seleção profissionais de saúde autônomos ou
-                    pessoas jurídicas que comprovem regularidade junto ao
-                    conselho de classe da categoria (sem pendências
-                    financeiras).
+                    Podem participar deste processo profissionais de saúde
+                    autônomos ou pessoas jurídicas com registro regular no
+                    conselho de classe, sem pendências financeiras.
                   </li>
                   <li>
-                    2.2 Os profissionais selecionados firmaram vínculo de
-                    prestação de serviço não empregatício junto a MEDLAR.
+                    Os selecionados firmarão contrato de prestação de serviços
+                    com a MEDLAR, sem vínculo empregatício.
                   </li>
                   <li>
-                    2.3 Para participar, os profissionais ou pessoas jurídicas
-                    interessados, deverão apresentar toda a documentação
-                    solicitada neste edital até 31/03/2025.
+                    Interessados devem enviar toda a documentação exigida neste
+                    edital até 31/03/2025.
                   </li>
                 </ul>
               </CardContent>
