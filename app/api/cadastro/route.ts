@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import prisma from '@/lib/prisma' // Configuração do Prisma
+import prisma from '@/lib/prisma'
 import { SenDEmail } from '@/services/email'
 import { v2 as cloudinary } from 'cloudinary'
 import type { TurnstileResponse } from '@/lib/types'
@@ -30,10 +30,8 @@ async function verifyTurnstileToken(token: string): Promise<boolean> {
 
 export async function POST(req: Request) {
   try {
-    // 1. Validação inicial e recepção de dados
     const formData = await req.formData()
 
-    // 2. Extrai os dados do formulário
     const nome = formData.get('nome') as string
     const cnpjCpf = formData.get('cnpj_cpf') as string
     const telefone = formData.get('telefone') as string
@@ -55,8 +53,6 @@ export async function POST(req: Request) {
       : []
 
     const captchaToken = formData.get('turnstile_token') as string
-
-    // 3. Validação de campos obrigatórios
     if (!nome || !cargo || !cidade || !estado || !cnpjCpf || !captchaToken) {
       return NextResponse.json(
         {
@@ -66,8 +62,6 @@ export async function POST(req: Request) {
         { status: 400 },
       )
     }
-
-    // 4. Verifica se o token do Turnstile é válido
     const isCaptchaValid = await verifyTurnstileToken(captchaToken)
     if (!isCaptchaValid) {
       return NextResponse.json(
@@ -75,8 +69,6 @@ export async function POST(req: Request) {
         { status: 400 },
       )
     }
-
-    // 5. Verifica duplicidade de CPF/CNPJ
     const existingCandidato = await prisma.candidatos.findUnique({
       where: { cnpjCpf },
     })
@@ -108,8 +100,6 @@ export async function POST(req: Request) {
         idade,
       },
     })
-
-    // 7. Associa as cidades selecionadas ao candidato
     for (const cidadeSelecionada of cidadesSelecionadas) {
       await prisma.atuacao.create({
         data: {
@@ -118,44 +108,34 @@ export async function POST(req: Request) {
         },
       })
     }
-
-    // 8. Processa e salva os arquivos no Cloudinary
     const arquivoCompactado = formData.get('documentos') as File
-
     if (arquivoCompactado) {
       const buffer = Buffer.from(await arquivoCompactado.arrayBuffer())
 
       const uploadResponse = await cloudinary.uploader.upload_stream(
-        { resource_type: 'raw' }, // Define o tipo de recurso como 'raw' para arquivos ZIP
+        { resource_type: 'raw' },
         async (error, result) => {
           if (error) {
             console.error('Erro no upload para o Cloudinary:', error)
             throw new Error('Erro ao fazer upload para o Cloudinary')
           }
-          console.log('Arquivo enviado para o Cloudinary:', result)
-          //
-          // Salvar apenas a URL no banco de dados
           if (result && result.secure_url) {
-            // Agora, você pode salvar a URL no banco de dados
             await prisma.arquivos.create({
               data: {
-                candidatoId: novoCandidato.id, // Assumindo que novoCandidato.id está disponível
-                nomeArquivo: arquivoCompactado.name, // Nome do arquivo (se necessário)
-                caminhoArquivo: result.secure_url, // URL do arquivo no Cloudinary
+                candidatoId: novoCandidato.id,
+                nomeArquivo: arquivoCompactado.name,
+                caminhoArquivo: result.secure_url,
               },
             })
           }
         },
       )
 
-      uploadResponse.end(buffer) // Finaliza o upload do arquivo
+      uploadResponse.end(buffer)
     } else {
       console.log('Arquivo nao encontrado')
     }
-    // 9. Envia email de confirmação
     await SenDEmail({ data: novoCandidato })
-
-    // 10. Retorna sucesso
     return NextResponse.json(
       { message: 'Cadastro realizado com sucesso', candidato: novoCandidato },
       { status: 201 },

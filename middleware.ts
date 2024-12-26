@@ -3,7 +3,6 @@ import { NextResponse, type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
   const token = await getToken({ req: request, secret: process.env.JWT_SECRET })
-  console.log(!token)
   if (!token) {
     return NextResponse.redirect(new URL('/admin', request.url)) // Redireciona para o login
   }

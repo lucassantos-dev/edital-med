@@ -22,128 +22,19 @@ import {
   LogOut,
   Download,
 } from 'lucide-react'
-import type { Candidato } from '@/lib/types'
 import { CandidatosTable } from '@/components/adm/candidatos-table'
 import { CandidatoDetalhes } from '@/components/adm/candidato-detalhes'
 import { ConfirmDialog } from '@/components/adm/confirm-dialog'
 import ExcelJS from 'exceljs'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { signOut } from 'next-auth/react'
-// // Dados de exemplo para a tabela
-// const candidatos: Candidato[] = [
-//   {
-//     id: 1,
-//     nome: 'João Silva',
-//     email: 'joao@example.com',
-//     cnpjCpf: '123.456.789-00',
-//     telefone: '(11) 98765-4321',
-//     sexo: 'Masculino',
-//     especializacao: 'Geriatria',
-//     experiencia: '5 anos',
-//     experienciaHomeCare: '3 anos',
-//     cargo: 'Enfermeiro',
-//     valor: 100,
-//     idade: 35,
-//     cep: '01234-567',
-//     cidade: 'São Paulo',
-//     estado: 'SP',
-//     documentosValidados: true,
-//     ativo: true,
-//     atuacoes: [
-//       { id: 1, cidade: 'São Paulo' },
-//       { id: 2, cidade: 'Campinas' },
-//     ],
-//   },
-//   {
-//     id: 2,
-//     nome: 'Maria Santos',
-//     email: 'maria@example.com',
-//     cnpjCpf: '987.654.321-00',
-//     telefone: '(21) 98765-4321',
-//     sexo: 'Feminino',
-//     especializacao: 'Ortopedia',
-//     experiencia: '7 anos',
-//     experienciaHomeCare: '2 anos',
-//     cargo: 'Fisioterapeuta',
-//     valor: 90,
-//     idade: 32,
-//     cep: '20000-000',
-//     cidade: 'Rio de Janeiro',
-//     estado: 'RJ',
-//     documentosValidados: false,
-//     ativo: true,
-//     atuacoes: [{ id: 3, cidade: 'Rio de Janeiro' }],
-//   },
-//   {
-//     id: 3,
-//     nome: 'Carlos Oliveira',
-//     email: 'carlos@example.com',
-//     cnpjCpf: '456.789.123-00',
-//     telefone: '(31) 98765-4321',
-//     sexo: 'Masculino',
-//     especializacao: null,
-//     experiencia: '2 anos',
-//     experienciaHomeCare: '1 ano',
-//     cargo: 'Cuidador',
-//     valor: 50,
-//     idade: 28,
-//     cep: '30000-000',
-//     cidade: 'Belo Horizonte',
-//     estado: 'MG',
-//     documentosValidados: true,
-//     ativo: false,
-//     atuacoes: [
-//       { id: 4, cidade: 'Belo Horizonte' },
-//       { id: 5, cidade: 'Contagem' },
-//     ],
-//   },
-//   {
-//     id: 4,
-//     nome: 'Ana Pereira',
-//     email: 'ana@example.com',
-//     cnpjCpf: '789.123.456-00',
-//     telefone: '(41) 98765-4321',
-//     sexo: 'Feminino',
-//     especializacao: 'UTI',
-//     experiencia: '4 anos',
-//     experienciaHomeCare: null,
-//     cargo: 'Técnico de Enfermagem',
-//     valor: 70,
-//     idade: 30,
-//     cep: '80000-000',
-//     cidade: 'Curitiba',
-//     estado: 'PR',
-//     documentosValidados: false,
-//     ativo: true,
-//     atuacoes: [{ id: 6, cidade: 'Curitiba' }],
-//   },
-//   {
-//     id: 5,
-//     nome: 'Pedro Costa',
-//     email: 'pedro@example.com',
-//     cnpjCpf: '321.654.987-00',
-//     telefone: '(51) 98765-4321',
-//     sexo: 'Masculino',
-//     especializacao: 'Clínica Geral',
-//     experiencia: '10 anos',
-//     experienciaHomeCare: '5 anos',
-//     cargo: 'Médico',
-//     valor: 200,
-//     idade: 40,
-//     cep: '90000-000',
-//     cidade: 'Porto Alegre',
-//     estado: 'RS',
-//     documentosValidados: true,
-//     ativo: true,
-//     atuacoes: [
-//       { id: 7, cidade: 'Porto Alegre' },
-//       { id: 8, cidade: 'Canoas' },
-//     ],
-//   },
-// ]
+import type { Candidato } from '@/lib/types'
+import { dataExemple } from '@/lib/data-exemple'
 
 export default function ParticipantesPage() {
   const router = useRouter()
+  const [isDownloading, setIsDownloading] = useState<number | null>(null)
+
   const [candidatosData, setCandidatosData] = useState<Candidato[]>([])
   const [filteredCandidatos, setFilteredCandidatos] = useState<Candidato[]>([])
   const [selectedCandidato, setSelectedCandidato] = useState<Candidato | null>(
@@ -164,13 +55,15 @@ export default function ParticipantesPage() {
     cidade: '',
     cargo: '',
     atuacao: '',
+    estado: '',
   })
 
   useEffect(() => {
     const fetchCandidatos = async () => {
       try {
-        const response = await fetch('/api/protected/candidatos')
-        const data = await response.json()
+        // const response = await fetch('/api/protected/candidatos')
+        // const data = await response.json()
+        const data = dataExemple
         setCandidatosData(data)
         setFilteredCandidatos(data)
       } catch (error) {
@@ -181,19 +74,20 @@ export default function ParticipantesPage() {
   }, [router])
 
   useEffect(() => {
-    const filtered = candidatosData.filter(
-      (candidato) =>
-        candidato.nome.toLowerCase().includes(filters.nome.toLowerCase()) &&
-        candidato.cnpjCpf.includes(filters.cpf) &&
-        candidato.cidade.toLowerCase().includes(filters.cidade.toLowerCase()) &&
-        candidato.cargo.toLowerCase().includes(filters.cargo.toLowerCase()) &&
-        (filters.atuacao === '' ||
-          candidato.atuacoes.some((atuacao) =>
-            atuacao.cidade
-              .toLowerCase()
-              .includes(filters.atuacao.toLowerCase()),
-          )),
-    )
+    const filtered = candidatosData.filter((candidato) => {
+      return Object.entries(filters).every(([key, value]) => {
+        if (!value) return true // Ignorar filtros vazios
+        if (key === 'atuacao') {
+          return candidato.atuacoes.some((atuacao) =>
+            atuacao.cidade.nome.toLowerCase().includes(value.toLowerCase()),
+          )
+        }
+        return candidato[key as keyof Candidato]
+          ?.toString()
+          .toLowerCase()
+          .includes(value.toLowerCase())
+      })
+    })
     setFilteredCandidatos(filtered)
   }, [filters, candidatosData])
 
@@ -201,9 +95,29 @@ export default function ParticipantesPage() {
     signOut({ callbackUrl: '/admin' })
   }
 
-  const handleDownloadArquivos = (id: number) => {
-    // Lógica para download de arquivos
-    console.log(`Baixando arquivos do candidato ${id}`)
+  const handleDownloadArquivos = async (id: number) => {
+    setIsDownloading(id) // Inicia o indicador de carregamento para o arquivo específico
+    try {
+      const response = await fetch(`/api/protected/candidatos/${id}/arquivos`)
+      if (!response.ok) {
+        throw new Error('Erro ao buscar o arquivo')
+      }
+      const { url, nomeArquivo } = await response.json()
+      const blobResponse = await fetch(url)
+      const blob = await blobResponse.blob()
+      const objectUrl = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = objectUrl
+      a.download = nomeArquivo || 'arquivo'
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(objectUrl)
+    } catch (error) {
+      console.error('Erro ao baixar o arquivo:', error)
+    } finally {
+      setIsDownloading(null) // Finaliza o indicador de carregamento
+    }
   }
 
   const handleToggleDocumentosValidados = (id: number) => {
@@ -227,32 +141,30 @@ export default function ParticipantesPage() {
     }
   }
 
-  const handleToggleAtivo = (id: number) => {
-    const candidato = candidatosData.find((c) => c.id === id)
-    if (candidato) {
-      setConfirmDialogConfig({
-        title: 'Confirmar Alteração',
-        description: `Deseja ${candidato.ativo ? 'desativar' : 'ativar'} o candidato ${candidato.nome}?`,
-        onConfirm: () => {
-          setCandidatosData((prevData) =>
-            prevData.map((c) => (c.id === id ? { ...c, ativo: !c.ativo } : c)),
-          )
-          setIsConfirmDialogOpen(false)
-        },
-      })
-      setIsConfirmDialogOpen(true)
-    }
-  }
+  // const handleToggleAtivo = (id: number) => {
+  //   const candidato = candidatosData.find((c) => c.id === id)
+  //   if (candidato) {
+  //     setConfirmDialogConfig({
+  //       title: 'Confirmar Alteração',
+  //       description: `Deseja ${candidato.ativo ? 'desativar' : 'ativar'} o candidato ${candidato.nome}?`,
+  //       onConfirm: () => {
+  //         setCandidatosData((prevData) =>
+  //           prevData.map((c) => (c.id === id ? { ...c, ativo: !c.ativo } : c)),
+  //         )
+  //         setIsConfirmDialogOpen(false)
+  //       },
+  //     })
+  //     setIsConfirmDialogOpen(true)
+  //   }
+  // }
 
   const handleCandidatoClick = (candidato: Candidato) => {
     setSelectedCandidato(candidato)
     setIsDetailOpen(true)
   }
-
   const handleFilterChange = (key: string, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }))
   }
-
   const exportToExcel = async () => {
     setIsExporting(true)
     try {
@@ -289,7 +201,7 @@ export default function ParticipantesPage() {
           estado: candidato.estado,
           documentosValidados: candidato.documentosValidados ? 'Sim' : 'Não',
           ativo: candidato.ativo ? 'Sim' : 'Não',
-          atuacoes: candidato.atuacoes,
+          atuacoes: candidato.atuacoes.map((a) => a.cidade.nome).join(', '),
         })
       })
 
@@ -399,6 +311,15 @@ export default function ParticipantesPage() {
                 placeholder="Filtrar por atuação"
               />
             </div>
+            <div>
+              <Label htmlFor="filter-atuacao">Estado(UF)</Label>
+              <Input
+                id="filter-estado"
+                value={filters.estado}
+                onChange={(e) => handleFilterChange('estado', e.target.value)}
+                placeholder="Filtrar por Estado"
+              />
+            </div>
           </div>
         </div>
         <div className="mt-4 mb-4 flex justify-end">
@@ -426,7 +347,8 @@ export default function ParticipantesPage() {
             onCandidatoClick={handleCandidatoClick}
             onDownloadArquivos={handleDownloadArquivos}
             onToggleDocumentosValidados={handleToggleDocumentosValidados}
-            onToggleAtivo={handleToggleAtivo}
+            // onToggleAtivo={handleToggleAtivo}
+            isDownloading={isDownloading}
           />
         </div>
       </main>

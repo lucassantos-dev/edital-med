@@ -1,4 +1,4 @@
-import type { Candidatos } from '@prisma/client'
+import type { Candidatos, Cidades } from '@prisma/client'
 
 export interface SendEmailProps {
   data: Candidatos
@@ -19,28 +19,10 @@ export interface TurnstileResponse {
   cdata?: string
 }
 
-export type Atuacao = {
+type Atuacao = {
   id: number
-  cidade: string
+  cidade: Cidades
 }
-
-export type Candidato = {
-  id: number
-  nome: string
-  email: string
-  cnpjCpf: string
-  telefone: string
-  sexo: string
-  especializacao: string | null
-  experiencia: string | null
-  experienciaHomeCare: string | null
-  cargo: string
-  valor: number | null
-  idade: number | null
-  cep: string
-  cidade: string
-  estado: string
-  documentosValidados: boolean
-  ativo: boolean
+export type Candidato = Candidatos & {
   atuacoes: Atuacao[]
 }

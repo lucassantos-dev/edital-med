@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Table,
@@ -8,15 +9,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import type { Candidato } from '@/lib/types'
 import { Download } from 'lucide-react'
+import type { Candidato } from '@/lib/types'
 
 interface CandidatosTableProps {
   candidatos: Candidato[]
   onCandidatoClick: (candidato: Candidato) => void
   onDownloadArquivos: (id: number) => void
   onToggleDocumentosValidados: (id: number) => void
-  onToggleAtivo: (id: number) => void
+  isDownloading: number | null
 }
 
 export function CandidatosTable({
@@ -24,8 +25,29 @@ export function CandidatosTable({
   onCandidatoClick,
   onDownloadArquivos,
   onToggleDocumentosValidados,
-  // onToggleAtivo,
+  isDownloading,
 }: CandidatosTableProps) {
+  // Estado de paginação
+  const [currentPage, setCurrentPage] = useState(0)
+  const [itemsPerPage] = useState(5) // Defina o número de itens por página
+
+  // Calcular os itens da página atual
+  const indexOfLastItem = (currentPage + 1) * itemsPerPage
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage
+  const currentItems = candidatos.slice(indexOfFirstItem, indexOfLastItem)
+  // Funções de navegação de página
+  const nextPage = () => {
+    if (currentPage < Math.ceil(candidatos.length / itemsPerPage) - 1) {
+      setCurrentPage(currentPage + 1)
+    }
+  }
+
+  const prevPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1)
+    }
+  }
+
   return (
     <>
       <div className="mb-4 flex items-center space-x-4">
@@ -53,7 +75,7 @@ export function CandidatosTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {candidatos.map((candidato) => (
+          {currentItems.map((candidato) => (
             <TableRow
               key={candidato.id}
               onClick={() => onCandidatoClick(candidato)}
@@ -83,15 +105,22 @@ export function CandidatosTable({
               <TableCell>{`${candidato.cidade}/${candidato.estado}`}</TableCell>
               <TableCell>
                 <Button
+                  onClick={() => onDownloadArquivos(candidato.id)}
+                  disabled={isDownloading === candidato.id}
                   variant="outline"
                   size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    onDownloadArquivos(candidato.id)
-                  }}
                 >
-                  <Download className="h-4 w-4 mr-2" />
-                  Baixar
+                  {isDownloading === candidato.id ? (
+                    <span className="flex items-center">
+                      <span className="animate-spin mr-2">&#9696;</span>
+                      Carregando...
+                    </span>
+                  ) : (
+                    <>
+                      Baixar Arquivo
+                      <Download className="h-4 w-4 mr-2" />
+                    </>
+                  )}
                 </Button>
               </TableCell>
               <TableCell>
@@ -108,22 +137,26 @@ export function CandidatosTable({
                     ? 'Invalidar Docs'
                     : 'Validar Docs'}
                 </Button>
-                {/* <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-28"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    onToggleAtivo(candidato.id)
-                  }}
-                >
-                  {candidato.ativo ? 'Desativar' : 'Ativar'}
-                </Button> */}
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+
+      {/* Controles de navegação */}
+      <div className="flex justify-between mt-4">
+        <Button onClick={prevPage} disabled={currentPage === 0}>
+          Anterior
+        </Button>
+        <Button
+          onClick={nextPage}
+          disabled={
+            currentPage >= Math.ceil(candidatos.length / itemsPerPage) - 1
+          }
+        >
+          Próximo
+        </Button>
+      </div>
     </>
   )
 }

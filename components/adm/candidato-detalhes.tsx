@@ -5,35 +5,19 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
-
-type Atuacao = {
-  id: number
-  cidade: string
-}
-
-type CandidatoDetalhado = {
-  id: number
-  nome: string
-  email: string
-  cnpjCpf: string
-  telefone: string
-  sexo: string
-  especializacao: string | null
-  experiencia: string | null
-  experienciaHomeCare: string | null
-  cargo: string
-  valor: number | null
-  idade: number | null
-  cep: string
-  cidade: string
-  estado: string
-  documentosValidados: boolean
-  ativo: boolean
-  atuacoes: Atuacao[]
-}
+import type { Candidatos } from '@prisma/client'
 
 type CandidatoDetalhesProps = {
-  candidato: CandidatoDetalhado | null
+  candidato:
+    | (Candidatos & {
+        atuacoes: {
+          id: number
+          cidade: {
+            nome: string
+          }
+        }[]
+      })
+    | null
   isOpen: boolean
   onClose: () => void
 }
@@ -44,7 +28,6 @@ export function CandidatoDetalhes({
   onClose,
 }: CandidatoDetalhesProps) {
   if (!candidato) return null
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-3xl">
@@ -117,7 +100,7 @@ export function CandidatoDetalhes({
               {candidato.atuacoes.length > 0 ? (
                 <ul>
                   {candidato.atuacoes.map((atuacao) => (
-                    <li key={atuacao.id}>{atuacao.cidade}</li>
+                    <li key={atuacao.id}>{atuacao.cidade.nome}</li>
                   ))}
                 </ul>
               ) : (
