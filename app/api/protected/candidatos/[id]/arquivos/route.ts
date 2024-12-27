@@ -1,10 +1,8 @@
-// /app/api/protected/candidatos/[id]/arquivos/route.ts
-
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 
 export async function GET(
-  req: Request,
+  request: Request,
   { params }: { params: { id: string } },
 ) {
   const candidatoId = Number(params.id)

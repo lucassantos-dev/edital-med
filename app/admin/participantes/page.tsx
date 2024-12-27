@@ -29,7 +29,7 @@ import ExcelJS from 'exceljs'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { signOut } from 'next-auth/react'
 import type { Candidato } from '@/lib/types'
-import { dataExemple } from '@/lib/data-exemple'
+// import { dataExemple } from '@/lib/data-exemple'
 
 export default function ParticipantesPage() {
   const router = useRouter()
@@ -61,9 +61,9 @@ export default function ParticipantesPage() {
   useEffect(() => {
     const fetchCandidatos = async () => {
       try {
-        // const response = await fetch('/api/protected/candidatos')
-        // const data = await response.json()
-        const data = dataExemple
+        const response = await fetch('/api/protected/candidatos')
+        const data = await response.json()
+        // const data = dataExemple
         setCandidatosData(data)
         setFilteredCandidatos(data)
       } catch (error) {
@@ -120,21 +120,45 @@ export default function ParticipantesPage() {
     }
   }
 
-  const handleToggleDocumentosValidados = (id: number) => {
+  const handleToggleDocumentosValidados = async (id: number) => {
     const candidato = candidatosData.find((c) => c.id === id)
     if (candidato) {
       setConfirmDialogConfig({
         title: 'Confirmar Alteração',
         description: `Deseja ${candidato.documentosValidados ? 'invalidar' : 'validar'} os documentos de ${candidato.nome}?`,
-        onConfirm: () => {
-          setCandidatosData((prevData) =>
-            prevData.map((c) =>
-              c.id === id
-                ? { ...c, documentosValidados: !c.documentosValidados }
-                : c,
-            ),
-          )
-          setIsConfirmDialogOpen(false)
+        onConfirm: async () => {
+          try {
+            // Chamada à API para atualizar o status
+            const response = await fetch(
+              `/api/protected/candidatos/${id}/validar-documentos`,
+              {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  documentosValidados: !candidato.documentosValidados,
+                }),
+              },
+            )
+
+            if (!response.ok) {
+              throw new Error('Erro ao atualizar a validação dos documentos')
+            }
+
+            // Atualizar estado local após sucesso
+            setCandidatosData((prevData) =>
+              prevData.map((c) =>
+                c.id === id
+                  ? { ...c, documentosValidados: !c.documentosValidados }
+                  : c,
+              ),
+            )
+          } catch (error) {
+            console.log('Erro ao validar documentos:', error)
+          } finally {
+            setIsConfirmDialogOpen(false)
+          }
         },
       })
       setIsConfirmDialogOpen(true)
