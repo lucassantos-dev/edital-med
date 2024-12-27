@@ -98,7 +98,9 @@ export default function ParticipantesPage() {
   const handleDownloadArquivos = async (id: number) => {
     setIsDownloading(id) // Inicia o indicador de carregamento para o arquivo específico
     try {
-      const response = await fetch(`/api/protected/candidatos/${id}/arquivos`)
+      const response = await fetch(
+        `/api/protected/candidatos/arquivos?id=${id}`,
+      )
       if (!response.ok) {
         throw new Error('Erro ao buscar o arquivo')
       }
@@ -130,7 +132,7 @@ export default function ParticipantesPage() {
           try {
             // Chamada à API para atualizar o status
             const response = await fetch(
-              `/api/protected/candidatos/${id}/validar-documentos`,
+              `/api/protected/candidatos/validar-documentos?id=${id}`,
               {
                 method: 'PUT',
                 headers: {

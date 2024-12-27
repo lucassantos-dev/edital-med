@@ -1,11 +1,10 @@
 import prisma from '@/lib/prisma'
 import { NextResponse } from 'next/server'
 
-export async function PUT(
-  request: Request,
-  { params }: { params: { id: string } },
-) {
-  const candidatoId = Number(params.id)
+export async function PUT(request: Request) {
+  const { searchParams } = new URL(request.url)
+  const id = searchParams.get('id')
+  const candidatoId = Number(id)
   try {
     const body = await request.json()
     const { documentosValidados } = body

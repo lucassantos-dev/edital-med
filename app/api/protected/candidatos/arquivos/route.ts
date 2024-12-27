@@ -1,11 +1,16 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } },
-) {
-  const candidatoId = Number(params.id)
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url)
+  const id = searchParams.get('id')
+  const candidatoId = Number(id)
+  if (!candidatoId) {
+    return NextResponse.json(
+      { message: 'ID do candidato não fornecido' },
+      { status: 400 },
+    )
+  }
 
   try {
     // 1. Busca o arquivo associado ao candidato no banco de dados
