@@ -11,25 +11,19 @@ export async function GET(request: Request) {
       { status: 400 },
     )
   }
-
   try {
-    // 1. Busca o arquivo associado ao candidato no banco de dados
     const arquivo = await prisma.arquivos.findFirst({
       where: { candidatoId },
     })
-
-    // 2. Verifica se o arquivo existe
     if (!arquivo || !arquivo.caminhoArquivo) {
       return NextResponse.json(
         { message: 'Arquivo não encontrado' },
         { status: 404 },
       )
     }
-
-    // 3. Redireciona diretamente para a URL do Cloudinary
     return NextResponse.json({
       url: arquivo.caminhoArquivo,
-      nomeArquivo: arquivo.nomeArquivo, // Inclui o nome do arquivo
+      nomeArquivo: arquivo.nomeArquivo,
     })
   } catch (error) {
     console.error('Erro ao buscar o arquivo:', error)

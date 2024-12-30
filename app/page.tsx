@@ -116,15 +116,11 @@ export default function Home() {
                   <li>
                     Podem participar deste processo profissionais de saúde
                     autônomos ou pessoas jurídicas com registro regular no
-<<<<<<< HEAD
                     conselho de classe, sem pendências financeiras. 2.1 Somente
                     serão admitidos a participar deste processo de captação e
                     seleção profissionais de saúde autônomos ou pessoas
                     jurídicas que comprovem regularidade junto ao conselho de
                     classe da categoria (sem pendências financeiras).
-=======
-                    conselho de classe, sem pendências financeiras.
->>>>>>> 6a9b348 (text 2)
                   </li>
                   <li>
                     Os selecionados firmarão contrato de prestação de serviços

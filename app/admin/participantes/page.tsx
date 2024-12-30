@@ -118,7 +118,7 @@ export default function ParticipantesPage() {
     } catch (error) {
       console.error('Erro ao baixar o arquivo:', error)
     } finally {
-      setIsDownloading(null) // Finaliza o indicador de carregamento
+      setIsDownloading(null)
     }
   }
 
@@ -143,12 +143,9 @@ export default function ParticipantesPage() {
                 }),
               },
             )
-
             if (!response.ok) {
               throw new Error('Erro ao atualizar a validação dos documentos')
             }
-
-            // Atualizar estado local após sucesso
             setCandidatosData((prevData) =>
               prevData.map((c) =>
                 c.id === id

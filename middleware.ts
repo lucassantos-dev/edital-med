@@ -6,7 +6,6 @@ export async function middleware(request: NextRequest) {
   if (!token) {
     return NextResponse.redirect(new URL('/admin', request.url)) // Redireciona para o login
   }
-
   return NextResponse.next() // Permite o acesso à página
 }
 

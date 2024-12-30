@@ -105,7 +105,10 @@ export function CandidatosTable({
               <TableCell>{`${candidato.cidade}/${candidato.estado}`}</TableCell>
               <TableCell>
                 <Button
-                  onClick={() => onDownloadArquivos(candidato.id)}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onDownloadArquivos(candidato.id)
+                  }}
                   disabled={isDownloading === candidato.id}
                   variant="outline"
                   size="sm"

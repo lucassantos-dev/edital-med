@@ -4,11 +4,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { DialogHeader, DialogTitle } from '@/components/ui/dialog'
-
+import { toast } from 'react-toastify'
 interface CriarUsuarioFormProps {
   onClose: () => void
 }
-
 export function CriarUsuarioForm({ onClose }: CriarUsuarioFormProps) {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
@@ -29,12 +28,12 @@ export function CriarUsuarioForm({ onClose }: CriarUsuarioFormProps) {
       })
 
       if (response.ok) {
-        alert('Usuário criado com sucesso!')
+        toast.success('Cadastro realizado com sucesso!')
       } else {
-        alert('Ocorreu um erro inesperado. Tente novamente.')
+        toast.warning('Ocorreu um erro inesperado. Tente novamente.')
       }
     } catch (err) {
-      alert('Ocorreu um erro inesperado. Tente novamente.')
+      toast.warning('Ocorreu um erro inesperado. Tente novamente.')
     }
     onClose()
   }
