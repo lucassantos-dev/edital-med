@@ -1,11 +1,11 @@
 import sgMail from '@sendgrid/mail'
 import {
   generateCandidateEmailTemplate,
-  generateRHTemplate,
+  // generateRHTemplate,
 } from '../lib/utils'
-import fs from 'fs'
-import path from 'path'
-import prisma from '../lib/prisma'
+// import fs from 'fs'
+// import path from 'path'
+// import prisma from '../lib/prisma'
 import type { SendEmailProps } from '../lib/types'
 
 export async function SenDEmail({ data }: SendEmailProps) {
@@ -17,43 +17,43 @@ export async function SenDEmail({ data }: SendEmailProps) {
       'As variáveis de ambiente EMAIL_RH ou EMAIL_TI não estão definidas',
     )
   }
-  const arquivos = await prisma.arquivos.findMany({
-    where: { candidatoId: data.id },
-  })
-  const attachments = arquivos.map((arquivo) => {
-    const filePath = path.join(process.cwd(), arquivo.caminhoArquivo)
+  // const arquivos = await prisma.arquivos.findMany({
+  //   where: { candidatoId: data.id },
+  // })
+  // const attachments = arquivos.map((arquivo) => {
+  //   const filePath = path.join(process.cwd(), arquivo.caminhoArquivo)
 
-    const normalizedPath = path.normalize(filePath)
-    const fileBuffer = fs.readFileSync(normalizedPath)
-    return {
-      content: fileBuffer.toString('base64'),
-      filename: arquivo.nomeArquivo,
-      type: 'application/pdf', // Ou outro tipo MIME conforme necessário
-      disposition: 'attachment',
-    }
-  })
+  //   const normalizedPath = path.normalize(filePath)
+  //   const fileBuffer = fs.readFileSync(normalizedPath)
+  //   return {
+  //     content: fileBuffer.toString('base64'),
+  //     filename: arquivo.nomeArquivo,
+  //     type: 'application/pdf', // Ou outro tipo MIME conforme necessário
+  //     disposition: 'attachment',
+  //   }
+  // })
   sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-  const msgRh = {
-    to: process.env.EMAIL_RH,
-    from: process.env.EMAIL_TI,
-    subject: 'Edita Medlar 2024',
-    html: generateRHTemplate(data),
-    attachments,
-  }
+  // const msgRh = {
+  //   to: process.env.EMAIL_RH,
+  //   from: process.env.EMAIL_TI,
+  //   subject: 'Edita Medlar 2024',
+  //   html: generateRHTemplate(data),
+  //   attachments,
+  // }
   const msgUser = {
     to: data.email,
     from: process.env.EMAIL_TI,
     subject: 'Edita Medlar 2024',
     html: generateCandidateEmailTemplate(data.nome),
   }
-  sgMail
-    .send(msgRh)
-    .then(() => {
-      console.log('Email sent')
-    })
-    .catch((error) => {
-      console.error(error)
-    })
+  // sgMail
+  //   .send(msgRh)
+  //   .then(() => {
+  //     console.log('Email sent')
+  //   })
+  //   .catch((error) => {
+  //     console.error(error)
+  //   })
   sgMail
     .send(msgUser)
     .then(() => {
